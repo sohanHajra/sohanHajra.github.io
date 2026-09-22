@@ -7,6 +7,16 @@
 <div class="diagram"><span>12m train</span><i>→</i><span>parameter selection</span><i>→</i><span>warm-up only</span><i>→</i><span>3m OOS</span><i>→</i><span>advance & repeat</span></div>
 <h2 id="results">Current baseline</h2><div class="table-wrap"><table><thead><tr><th>Metric</th><th>Strategy</th><th>SPY buy & hold</th></tr></thead><tbody><tr><td>CAGR</td><td>9.2%</td><td>17.1%</td></tr><tr><td>Annualized Sharpe</td><td>0.82</td><td>1.07</td></tr><tr><td>Maximum drawdown</td><td>-11.8%</td><td>-19.0%</td></tr></tbody></table></div>
 <p>The strategy reduced drawdown and market exposure, but <strong>did not outperform SPY on return or Sharpe</strong>. I use trade-level, regime, and flat-period attribution to study where it helped, where it failed, and whether the research design itself is introducing bias.</p>
+<div class="figure-grid" aria-label="Out-of-sample research figures">
+  <figure class="research-figure">
+    <img loading="lazy" src="https://raw.githubusercontent.com/sohanHajra/quant_trading_system/master/figures/Figure_4.png" alt="Out-of-sample walk-forward strategy equity curve compared with SPY buy and hold">
+    <figcaption><strong>Out-of-sample equity comparison.</strong> The walk-forward strategy compounds more slowly than SPY, making the benchmark shortfall immediately visible rather than hiding it behind standalone strategy statistics.</figcaption>
+  </figure>
+  <figure class="research-figure">
+    <img loading="lazy" src="https://raw.githubusercontent.com/sohanHajra/quant_trading_system/master/figures/Figure_5.png" alt="Out-of-sample drawdown comparison between the walk-forward strategy and SPY buy and hold">
+    <figcaption><strong>Out-of-sample drawdown comparison.</strong> The strategy experienced a shallower maximum drawdown than SPY, illustrating the return-versus-risk tradeoff behind the headline metrics.</figcaption>
+  </figure>
+</div>
 <div class="callout"><strong>Important:</strong> these are historical research/backtest results, not live trading performance.</div>
 <h2 id="lesson">What I learned</h2><p>The project made implementation details impossible to treat as bookkeeping. Indicator warm-up, fold boundaries, position shifting, cost application, and return construction can all change the answer. The useful outcome was not a claim of alpha; it was a cleaner process for discovering when a strategy does not survive a fair test.</p>
 <p><a class="button primary" href="https://github.com/sohanHajra/quant_trading_system" target="_blank" rel="noopener">Inspect the repository ↗</a></p>
