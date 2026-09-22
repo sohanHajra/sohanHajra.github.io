@@ -4,9 +4,17 @@
 <div class="container article"><article class="article-main">
 <div class="callout"><strong>Attribution:</strong> this was a team project. My primary contribution was development and refinement of the ETF-arbitrage strategy—not sole ownership of the full market-data pipeline or every strategy in the repository.</div>
 <h2 id="idea">Trading idea</h2><p>The strategy uses CME crude-oil futures as a configurable fair-value proxy for USO and looks for threshold dislocations between that reference and executable USO quotes. The implementation then has to decide where and how to trade rather than stopping at signal detection.</p>
+<figure class="research-figure">
+  <img loading="lazy" src="https://raw.githubusercontent.com/sohanHajra/USO-WTI_ETF-Futures_Arbitrage-FIN_556/main/images/etf_arb_visual.png" alt="ETF arbitrage event-stream visualization showing cross-venue quotes, trades, and detected arbitrage opportunities">
+  <figcaption><strong>Event-stream visualization from the team project.</strong> Cross-venue bid/ask activity and detected opportunities make the execution problem concrete: signal detection has to coexist with venue state and rapidly changing quotes.</figcaption>
+</figure>
 <h2 id="contribution">My contribution</h2><ul><li>Refined the C++ ETF-arbitrage strategy and its execution loop.</li><li>Added inventory-aware fair-value skew so current risk changes the price at which the strategy is willing to trade.</li><li>Selected the best available USO quote across venues rather than assuming a single execution destination.</li><li>Added position-aware sizing and limit pricing, runtime-tunable thresholds/aggressiveness, working-order guards, and exit-to-flat logic.</li><li>Iterated through debugging and historical market-data testing in Strategy Studio.</li></ul>
 <h2 id="why">Why it matters</h2><p>The project was useful because it made a familiar lesson concrete: a trading signal is only one component of a strategy. Inventory, partial fills, aggressiveness, venue choice, latency, order state, and risk controls determine how the idea behaves when it interacts with an actual market.</p>
 <div class="diagram"><span>CME proxy</span><i>→</i><span>fair value</span><i>→</i><span>inventory skew</span><i>→</i><span>best venue</span><i>→</i><span>risk-aware order</span></div>
+<figure class="research-figure">
+  <img loading="lazy" src="https://raw.githubusercontent.com/sohanHajra/USO-WTI_ETF-Futures_Arbitrage-FIN_556/main/images/ss_bt_visual_2.png" alt="Strategy Studio backtest order timeline and cumulative profit and loss chart">
+  <figcaption><strong>Strategy Studio backtest output.</strong> Order activity and cumulative simulated P&amp;L are shown as project diagnostics, not as live-trading performance. The underlying repository preserves the broader team context and implementation details.</figcaption>
+</figure>
 <p><a class="button primary" href="https://github.com/sohanHajra/USO-WTI_ETF-Futures_Arbitrage-FIN_556" target="_blank" rel="noopener">Inspect the repository ↗</a></p>
 </article><aside class="sidebar"><strong>On this page</strong><a href="#idea">Trading idea</a><a href="#contribution">My contribution</a><a href="#why">Why it matters</a></aside></div></main>
 <footer class="site-footer"><div class="container footer-inner"><span>© 2026 Sohan Hajra</span><a href="../">Portfolio home</a></div></footer></body></html>
