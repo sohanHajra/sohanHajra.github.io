@@ -28,4 +28,4 @@ https://sohanhajra.github.io/
 
 ## Content integrity
 
-Project claims are grounded in the current résumé, Job Search 101 evidence/story tracker, and the public GitHub repositories. Website claims should only change when the underlying evidence changes as well.
+Project claims are grounded in the current résumé, public LinkedIn profile, and the public GitHub repositories.
