@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sohan Hajra — Quantitative Research & Trading Systems</title>
+  <meta name="description" content="Sohan Hajra — UIUC Mathematics & Computer Science graduate focused on quantitative research, research engineering, and systematic trading.">
+  <meta name="theme-color" content="#0d1b2a">
+  <meta property="og:title" content="Sohan Hajra — Quantitative Research & Trading Systems">
+  <meta property="og:description" content="Market-microstructure research, systematic trading research infrastructure, and trading-system engineering.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/styles.css">
+  <script src="assets/script.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="./"><span class="brand-mark">SH</span><span>Sohan Hajra</span></a>
+    <nav class="nav-links" aria-label="Primary navigation">
+      <a href="#work">Work</a>
+      <a href="#approach">Approach</a>
+      <a href="#publication">Publication</a>
+      <a href="#about">About</a>
+      <a class="nav-cta" href="assets/Sohan_Hajra_Resume.pdf" target="_blank" rel="noopener">Résumé ↗</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <p class="eyebrow">Quantitative research · research engineering · systematic trading</p>
+        <h1>Sohan<br>Hajra</h1>
+        <div class="hero-role">Mathematics + Computer Science, UIUC</div>
+        <p class="hero-copy">I study market behavior and build the research systems needed to test trading ideas honestly—from closing-auction microstructure to walk-forward backtesting and execution logic.</p>
+        <div class="actions">
+          <a class="button primary" href="#work">View selected work ↓</a>
+          <a class="button secondary" href="https://github.com/sohanHajra" target="_blank" rel="noopener">GitHub ↗</a>
+          <a class="button secondary" href="https://www.linkedin.com/in/sohan-hajra/" target="_blank" rel="noopener">LinkedIn ↗</a>
+        </div>
+      </div>
+      <aside class="hero-panel" aria-label="Research process">
+        <div class="panel-kicker">How I work</div>
+        <div class="panel-title">Treat the research process as part of the result.</div>
+        <div class="pipeline">
+          <div class="pipe-row"><div class="pipe-dot"></div><div><strong>Form a testable question</strong><span>Start with market intuition, not model complexity.</span></div></div>
+          <div class="pipe-row"><div class="pipe-dot"></div><div><strong>Protect the evaluation</strong><span>Chronological splits, isolated out-of-sample accounting, explicit costs.</span></div></div>
+          <div class="pipe-row"><div class="pipe-dot"></div><div><strong>Interrogate the failure modes</strong><span>Negative results are evidence to explain, not outputs to hide.</span></div></div>
+          <div class="pipe-row"><div class="pipe-dot"></div><div><strong>Connect research to implementation</strong><span>Execution, inventory, data quality, and system behavior matter.</span></div></div>
+        </div>
+        <div class="panel-foot"><span>B.S. completed in 3 years</span><span>UIUC · 2026</span></div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section" id="work">
+    <div class="container">
+      <div class="section-head">
+        <div><p class="eyebrow">Selected work</p><h2>Research first.<br>Evidence attached.</h2></div>
+        <p>The site is the map; GitHub is the evidence. Each project below is presented around the question, research design, and what the work actually demonstrated.</p>
+      </div>
+      <div class="work-grid">
+        <article class="project-card feature">
+          <div class="card-top"><span class="tag">Market microstructure</span><span class="card-index">01</span></div>
+          <h3>Nasdaq Closing Auction Forecasting</h3>
+          <p class="project-question">Can information available before the close improve forecasts of the final Nasdaq closing-cross price without leaking future auction information?</p>
+          <p>Built a leakage-safe fixed-horizon research pipeline around indicative auction prices, signed imbalance, paired volume, and liquidity. Compared market-price baselines with OLS, Ridge, and XGBoost under chronological validation.</p>
+          <div class="metric-row">
+            <div class="metric"><strong>6</strong><span>fixed horizons</span></div>
+            <div class="metric"><strong>3</strong><span>model families</span></div>
+            <div class="metric"><strong>Frozen</strong><span>final test set</span></div>
+          </div>
+          <div class="card-links">
+            <a class="text-link" href="research/nasdaq.html">Research overview →</a>
+            <a class="text-link" href="https://github.com/sohanHajra/nasdaq-closing-auction-research" target="_blank" rel="noopener">GitHub ↗</a>
+          </div>
+        </article>
+
+        <article class="project-card side">
+          <div class="card-top"><span class="tag">Systematic research</span><span class="card-index">02</span></div>
+          <h3>Systematic Trading Research Platform</h3>
+          <p class="project-question">What survives when parameter choice, costs, warm-up history, and out-of-sample accounting are kept separate?</p>
+          <p>Built a Python research platform with DuckDB storage, parameter sweeps, 12-month training / 3-month OOS walk-forward evaluation, benchmark comparison, and trade/regime attribution.</p>
+          <div class="metric-row">
+            <div class="metric"><strong>15</strong><span>OOS folds</span></div>
+            <div class="metric"><strong>22</strong><span>OOS trades</span></div>
+            <div class="metric"><strong>5 bps</strong><span>turnover costs</span></div>
+          </div>
+          <p><strong>Result:</strong> the baseline reduced drawdown, but did not beat SPY on return or Sharpe. The failure analysis is part of the project—not something hidden from it.</p>
+          <div class="card-links">
+            <a class="text-link" href="research/systematic-trading.html">Research overview →</a>
+            <a class="text-link" href="https://github.com/sohanHajra/quant_trading_system" target="_blank" rel="noopener">GitHub ↗</a>
+          </div>
+        </article>
+
+        <article class="project-card third">
+          <div>
+            <div class="card-top"><span class="tag">Execution & trading systems</span><span class="card-index">03</span></div>
+            <h3>USO–WTI ETF/Futures Arbitrage</h3>
+            <p class="project-question">How does a simple fair-value dislocation idea change once venue selection, inventory, order sizing, and working-order safety become real constraints?</p>
+            <p>In a UIUC team project, I focused on the ETF-arbitrage strategy: refining C++ execution logic around a crude-futures fair-value proxy, best-venue USO quotes, inventory-aware fair-value skew, position-sensitive sizing, configurable aggressiveness, and working-order guards.</p>
+            <div class="card-links">
+              <a class="text-link" href="research/uso-wti.html">Project overview →</a>
+              <a class="text-link" href="https://github.com/sohanHajra/USO-WTI_ETF-Futures_Arbitrage-FIN_556" target="_blank" rel="noopener">GitHub ↗</a>
+            </div>
+          </div>
+          <div class="diagram" aria-label="Execution decision schematic">
+            <span>CME fair-value proxy</span><i>→</i><span>inventory skew</span><i>→</i><span>best USO venue</span><i>→</i><span>threshold + sizing</span><i>→</i><span>limit order</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt" id="approach">
+    <div class="container">
+      <div class="section-head">
+        <div><p class="eyebrow">Research principles</p><h2>What I optimize for.</h2></div>
+        <p>The recurring theme across my work is not a specific model. It is trying to make the path from idea to evidence harder to fool.</p>
+      </div>
+      <div class="principles">
+        <div class="principle"><span class="num">01</span><h3>Separate selection from evaluation</h3><p>Use training and validation data to make choices. Keep the final test set genuinely out of the decision loop.</p></div>
+        <div class="principle"><span class="num">02</span><h3>Benchmark before celebrating</h3><p>A strategy or model only becomes interesting relative to a credible baseline, realistic costs, and the risk it takes.</p></div>
+        <div class="principle"><span class="num">03</span><h3>Explain the miss</h3><p>When the result disappoints, attribution and failure analysis often teach more than another round of parameter optimization.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="publication">
+    <div class="container">
+      <div class="section-head">
+        <div><p class="eyebrow">Publication</p><h2>Research beyond markets.</h2></div>
+      </div>
+      <article class="publication">
+        <div>
+          <div class="pub-label">ACM SIGAI · AI Matters 11(1) · 2025</div>
+          <h3>An N-Gram Framework for Sentiment and Emotion-Aware Word Association Games</h3>
+          <a class="text-link" href="https://doi.org/10.1145/3774399.3774407" target="_blank" rel="noopener">DOI 10.1145/3774399.3774407 ↗</a>
+        </div>
+        <div>
+          <p>Undergraduate research with a multidisciplinary Penn State team on sentiment- and emotion-aware word association. The work combined n-gram co-occurrence and GloVe embeddings with VADER sentiment scores and SenticNet emotion labels.</p>
+          <p>My contribution included model development, RMSE-based evaluation across emotional categories, analysis, and technical writing.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section alt" id="experience">
+    <div class="container">
+      <div class="section-head">
+        <div><p class="eyebrow">Experience</p><h2>Engineering foundations.</h2></div>
+        <p>Data pipelines, testing, research tooling, and model infrastructure—the work that makes quantitative analysis reproducible.</p>
+      </div>
+      <div class="experience-grid">
+        <div class="exp"><div class="exp-head"><h3>Spade Labs</h3><span class="exp-time">Oct–Dec 2024</span></div><div class="exp-role">Data Engineering Intern</div><p>Built Python data/model-training pipelines using AWS SageMaker, PostgreSQL/pgvector, Docker, and large-scale embedding ingestion.</p></div>
+        <div class="exp"><div class="exp-head"><h3>Folio</h3><span class="exp-time">Jun–Sep 2024</span></div><div class="exp-role">Data Analyst Intern · Part-time, Remote</div><p>Built ETL workflows with Pandas, Airflow, and SQLAlchemy; added schema checks, DAG tests, and retry handling to surface failures earlier.</p></div>
+        <div class="exp"><div class="exp-head"><h3>RadicalX</h3><span class="exp-time">May–Aug 2024</span></div><div class="exp-role">AI Engineering Intern · Part-time, Remote</div><p>Developed containerized AI-service prototypes and prompt-evaluation workflows using Python, model APIs, MLflow, and Prometheus.</p></div>
+        <div class="exp"><div class="exp-head"><h3>Penn State University</h3><span class="exp-time">May–Dec 2024</span></div><div class="exp-role">Undergraduate Student Researcher</div><p>Worked on sentiment- and emotion-aware NLP models that led to the ACM SIGAI publication above.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="about">
+    <div class="container about">
+      <div><p class="eyebrow">About</p><h2>Markets, models, and the systems between them.</h2></div>
+      <div class="about-copy">
+        <p>I completed a B.S. in Mathematics & Computer Science at the University of Illinois Urbana-Champaign in three years. I am focused on early-career work in quantitative research, research engineering, quantitative development, and systematic trading.</p>
+        <p>I am most interested in environments where ideas are expected to survive contact with data: where a model has to beat a baseline, a backtest has to survive leakage and costs, and trading logic eventually has to operate under execution and risk constraints.</p>
+        <p>Outside the core research work, I have served as an elected University Senator at UIUC and have worked across software, data engineering, AI, and academic research.</p>
+        <div class="contact-strip">
+          <a href="mailto:sohancollege27@gmail.com">Email</a>
+          <a href="https://www.linkedin.com/in/sohan-hajra/" target="_blank" rel="noopener">LinkedIn ↗</a>
+          <a href="https://github.com/sohanHajra" target="_blank" rel="noopener">GitHub ↗</a>
+          <a href="assets/Sohan_Hajra_Resume.pdf" target="_blank" rel="noopener">Résumé ↗</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="site-footer"><div class="container footer-inner"><span>© <span data-year>2026</span> Sohan Hajra</span><span>Built as a concise index to the underlying research and code.</span></div></footer>
+</body>
+</html>
