@@ -161,3 +161,16 @@ th { background:#f4f7f6; color:#41535b; }
   html { scroll-behavior:auto; }
   *, *::before, *::after { transition:none!important; animation:none!important; }
 }
+
+.research-figure { margin: 26px 0 34px; }
+.research-figure img { display:block; width:100%; border:1px solid var(--line); border-radius:18px; background:#fff; box-shadow:0 8px 28px rgba(13,27,42,.06); }
+.research-figure figcaption { margin-top:10px; color:var(--muted); font-size:12px; line-height:1.5; }
+.figure-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:26px 0 34px; }
+.figure-grid .research-figure { margin:0; }
+.secondary-work { display:grid; grid-template-columns:.72fr 1.28fr; gap:28px; padding:24px 0; border-top:1px solid var(--line); align-items:start; }
+.secondary-work h3 { margin:4px 0 8px; font-size:22px; letter-spacing:-.03em; }
+.secondary-work p { margin:0 0 12px; color:var(--muted); }
+.secondary-work .tag { margin-bottom:8px; }
+@media (max-width: 760px) {
+  .figure-grid, .secondary-work { grid-template-columns:1fr; }
+}
