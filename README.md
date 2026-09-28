@@ -22,7 +22,7 @@ https://sohanhajra.github.io/
 - `index.html` — recruiter-facing homepage
 - `research/` — project detail pages
 - `assets/styles.css` — full responsive styling
-- `assets/Sohan_Hajra_Resume.pdf` — résumé linked from the site
+- `resume.html` — web résumé aligned to the current one-page recruiting résumé
 - `assets/favicon.svg` — site mark
 - `.nojekyll` — serve files directly on GitHub Pages
 
