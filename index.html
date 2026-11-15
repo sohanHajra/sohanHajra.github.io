@@ -44,7 +44,8 @@
         <div class="about-more">
           <div class="about-bio">
             <p>I study market behavior and build the research systems needed to test trading ideas honestly: from closing-auction microstructure to walk-forward backtesting and execution logic.</p>
-            <p>I completed my B.S. at the University of Illinois Urbana-Champaign in three years, and I&rsquo;m pursuing early-career work where quantitative research, software, and market decision-making meet.</p>
+            <p>I completed my B.S. at the University of Illinois Urbana-Champaign in three years.</p>
+            <p class="open-to">Open to early-career roles in quantitative research and research engineering. <a href="mailto:sohancollege27@gmail.com">Email me&nbsp;→</a></p>
           </div>
           <ul class="teasers" aria-label="Elsewhere on this site">
             <li><a href="#research"><span class="t-k">Research</span><span class="t-v">Closing auctions, walk-forward tests, ETF arbitrage</span><span class="arrow" aria-hidden="true">→</span></a></li>
@@ -85,7 +86,7 @@
             <div class="entry-index">01</div>
             <div>
               <h3>Nasdaq Closing Auction Forecasting</h3>
-              <p class="field">Market microstructure</p>
+              <p class="field">Market microstructure <span class="note-tag">Public code · private data</span></p>
               <p class="q">Can information available before the close improve forecasts of the final closing-cross price, without leaking future auction information?</p>
               <div class="body"><p>A leakage-safe, fixed-horizon pipeline around indicative prices, signed imbalance, paired volume, and liquidity, comparing market-price baselines with OLS, Ridge, and XGBoost under chronological validation.</p></div>
               <div class="entry-links"><a href="research/nasdaq.html">Research overview →</a><a href="https://github.com/sohanHajra/nasdaq-closing-auction-research" target="_blank" rel="noopener">GitHub<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a></div>
@@ -102,14 +103,14 @@
               <h3>Systematic Trading Research Platform</h3>
               <p class="field">Systematic research</p>
               <p class="q">What survives when parameter choice, costs, warm-up history, and out-of-sample accounting are kept separate?</p>
-              <div class="body"><p>Python and DuckDB, parameter sweeps, and 12-month training / 3-month out-of-sample walk-forward evaluation with benchmark comparison and trade and regime attribution.</p>
+              <div class="body"><p>Python and DuckDB, parameter sweeps, and 12-month training / 3-month out-of-sample walk-forward evaluation across 15 folds, with 5 bps turnover costs, benchmark comparison, and trade and regime attribution.</p>
               <p class="result">The baseline reduced drawdown but did not beat SPY on return or Sharpe. The failure analysis is part of the project.</p></div>
               <div class="entry-links"><a href="research/systematic-trading.html">Research overview →</a><a href="https://github.com/sohanHajra/quant_trading_system" target="_blank" rel="noopener">GitHub<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a></div>
             </div>
-            <ul class="stats" aria-label="Key figures">
-              <li><span class="v">15</span><span class="k">OOS folds</span></li>
-              <li><span class="v">22</span><span class="k">OOS trades</span></li>
-              <li><span class="v">5 bps</span><span class="k">turnover costs</span></li>
+            <ul class="stats" aria-label="Out-of-sample results against SPY buy and hold">
+              <li><span class="v">9.2%</span><span class="k">CAGR</span><span class="k bench">SPY 17.1%</span></li>
+              <li><span class="v">0.82</span><span class="k">Sharpe</span><span class="k bench">SPY 1.07</span></li>
+              <li><span class="v">&minus;11.8%</span><span class="k">max drawdown</span><span class="k bench">SPY &minus;19.0%</span></li>
             </ul>
           </li>
           <li class="entry">

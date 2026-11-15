@@ -340,3 +340,11 @@ td + td { font-family: var(--mono); font-size: 14.5px; }
   main { padding: 0; }
   a { text-decoration: none; }
 }
+
+/* review pass, 2026-11-15 */
+.open-to { color: var(--ink); }
+.open-to a { color: var(--accent); text-decoration: none; border-bottom: 1px solid currentColor; white-space: nowrap; }
+.open-to a:hover { border-bottom-color: transparent; }
+.field:has(.note-tag) { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+.note-tag { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line); border-radius: 3px; padding: 1px 6px; white-space: nowrap; }
+.stats .k.bench { font-family: var(--mono); font-size: 12px; letter-spacing: .02em; }
