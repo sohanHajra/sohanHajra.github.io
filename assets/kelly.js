@@ -10,7 +10,7 @@
   const btnPause = $('kelly-pause'), btnReset = $('kelly-reset');
   const nEl = $('kelly-n'), gAxis = $('kelly-g-axis');
   const R = { fstar: $('r-fstar'), f: $('r-f'), g: $('r-g'), med: $('r-med') };
-  const section = document.getElementById('play');
+  const section = document.getElementById('workbench');
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   const N = 20, T = 400;

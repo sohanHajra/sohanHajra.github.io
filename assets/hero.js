@@ -27,7 +27,7 @@
     brownian: {
       name: 'Brownian paths, settling into a Gaussian',
       tag: 'Random walk',
-      eq: 'dX<sub>t</sub> = σ dW<sub>t</sub> &nbsp;⇒&nbsp; X<sub>T</sub> ∼ 𝒩(0, σ<sup>2</sup>T)',
+      eq: 'dX<sub>t</sub> = σ dW<sub>t</sub>, X<sub>0</sub> = 0 &nbsp;⇒&nbsp; X<sub>T</sub> ∼ 𝒩(0, σ<sup>2</sup>T)',
       label: 'Brownian motion sample paths fanning out over time, with the Gaussian density of their endpoints drawn as a surface at the final time.',
       build() {
         const lines = [], N = 28, S = 120, x0 = -1, x1 = 0.55, sc = 0.5;
@@ -55,7 +55,7 @@
     smile: {
       name: 'Implied-volatility smile surface',
       tag: 'Illustrative · SVI',
-      eq: 'w(k) = a + b{ρ(k − m) + √((k − m)<sup>2</sup> + s<sup>2</sup>)}, &nbsp;σ = √(w/τ)',
+      eq: 'w(k) = a + b{ρ(k − m) + √((k − m)<sup>2</sup> + s<sup>2</sup>)}, &nbsp;σ<sub>BS</sub> = √(w/τ)',
       label: 'An illustrative implied-volatility surface across log-moneyness and maturity, generated from a raw SVI parameterisation, not market data.',
       build() {
         const rho = -0.35 - 0.3 * rnd(), m = 0.02 + 0.04 * rnd();
@@ -132,7 +132,7 @@
     book: {
       name: 'Limit-order-book depth through time',
       tag: 'Illustrative · synthetic',
-      eq: 'D<sub>ask</sub>(p) = Σ<sub>p<sub>i</sub> ≤ p</sub> q<sub>i</sub>, &nbsp;D<sub>bid</sub>(p) = Σ<sub>p<sub>i</sub> ≥ p</sub> q<sub>i</sub>',
+      eq: 'D<sup>a</sup>(p) = Σ<sub>i : a<sub>i</sub> ≤ p</sub> q<sub>i</sub><sup>a</sup>, &nbsp;D<sup>b</sup>(p) = Σ<sub>i : b<sub>i</sub> ≥ p</sub> q<sub>i</sub><sup>b</sup>',
       label: 'An illustrative, synthetic order book: cumulative bid and ask depth around a drifting mid price, drawn for successive snapshots in time.',
       build() {
         const L = 30, T = 22, lines = [];

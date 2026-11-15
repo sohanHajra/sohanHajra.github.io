@@ -7,15 +7,19 @@
   const main = document.getElementById('main');
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   // Older anchors from the previous one-page site, and deep links into a section.
-  const aliases = { work: 'research', approach: 'research', publication: 'research', experience: 'cv', 'additional-work': 'play', kelly: 'play' };
-  const titles = { about: 'Sohan Hajra', research: 'Research · Sohan Hajra', writing: 'Writing · Sohan Hajra', cv: 'CV · Sohan Hajra', play: 'Play · Sohan Hajra' };
+  const aliases = { work: 'research', approach: 'research', publication: 'research', experience: 'cv', 'additional-work': 'workbench', play: 'workbench', kelly: 'workbench' };
+  const titles = { about: 'Sohan Hajra', research: 'Research · Sohan Hajra', writing: 'Writing · Sohan Hajra', cv: 'CV · Sohan Hajra', workbench: 'Workbench · Sohan Hajra' };
   let current = null;
   let fade;
 
   function resolve() {
     const raw = decodeURIComponent(window.location.hash.slice(1));
     if (ids.includes(raw)) return { page: raw, anchor: null };
-    if (aliases[raw]) return { page: aliases[raw], anchor: raw === 'kelly' ? 'kelly' : null };
+    if (aliases[raw]) {
+      // Old names (#play, #work, …) become the canonical hash; #kelly stays a deep link into Workbench.
+      if (raw !== 'kelly') history.replaceState(history.state, '', '#' + aliases[raw]);
+      return { page: aliases[raw], anchor: raw === 'kelly' ? 'kelly' : null };
+    }
     return { page: 'about', anchor: null };
   }
 
@@ -29,6 +33,7 @@
         else a.removeAttribute('aria-current');
       });
       document.title = titles[page] || titles.about;
+      document.body.setAttribute('data-page', page === 'about' ? 'about' : 'other');
       const prev = current;
       current = page;
       document.dispatchEvent(new CustomEvent('sectionchange', { detail: { page, prev } }));
