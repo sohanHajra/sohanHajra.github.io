@@ -1,4 +1,4 @@
-// Hero: one markets-meets-math object per visit, drawn as a rotatable wire figure.
+// Hero: one mathematical object per visit, drawn as a rotatable wire figure.
 // Drag or arrow keys rotate; Space pauses; "Show another" or returning to About reshuffles.
 (() => {
   const canvas = document.getElementById('hero-canvas');
@@ -17,39 +17,113 @@
 
   const INK = [29, 28, 26], ACC = [123, 43, 35];
 
-  // ---------- random helpers ----------
   const rnd = Math.random;
-  function gauss() { let u = 0, v = 0; while (!u) u = rnd(); while (!v) v = rnd(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+  const TAU = 2 * Math.PI;
 
-  // Each builder returns { lines: [{ p: number[] (xyz...), c: 0 ink | 1 accent, w?: weight }], yaw, pitch }
-  // Coordinates are roughly within [-1, 1].
+  // Riemann zeta by Euler–Maclaurin summation (|error| < 1e-10 for |t| ≤ 100; checked against mpmath).
+  const BERN = [1 / 6, -1 / 30, 1 / 42, -1 / 30, 5 / 66, -691 / 2730, 7 / 6, -3617 / 510];
+  function npow(n, er, ei) { const l = Math.log(n), m = Math.exp(er * l), a = ei * l; return [m * Math.cos(a), m * Math.sin(a)]; }
+  function zeta(sr, si) {
+    const N = Math.ceil(Math.abs(si) / TAU) + 16;
+    let ar = 0, ai = 0;
+    for (let n = 1; n < N; n++) { const q = npow(n, -sr, -si); ar += q[0]; ai += q[1]; }
+    { const q = npow(N, 1 - sr, -si), dr = sr - 1, di = si, d = dr * dr + di * di; ar += (q[0] * dr + q[1] * di) / d; ai += (q[1] * dr - q[0] * di) / d; }
+    { const q = npow(N, -sr, -si); ar += q[0] / 2; ai += q[1] / 2; }
+    let pr = sr, pi = si, fact = 2;
+    for (let k = 1; k <= 8; k++) {
+      if (k > 1) {
+        for (const c of [2 * k - 3, 2 * k - 2]) { const r = pr * (sr + c) - pi * si, i = pr * si + pi * (sr + c); pr = r; pi = i; }
+        fact *= (2 * k - 1) * (2 * k);
+      }
+      const q = npow(N, -sr - 2 * k + 1, -si), f = BERN[k - 1] / fact;
+      ar += (pr * q[0] - pi * q[1]) * f; ai += (pr * q[1] + pi * q[0]) * f;
+    }
+    return [ar, ai];
+  }
+
+  // Grid helper: f(u, v) -> [x, y, z]; draws `nu` u-lines and `nv` v-lines, each finely sampled.
+  function mesh(f, u0, u1, v0, v1, nu, nv, su, sv, style = {}) {
+    const lines = [];
+    for (let i = 0; i <= nu; i++) {
+      const u = u0 + (u1 - u0) * i / nu, p = [];
+      for (let j = 0; j <= sv; j++) p.push(...f(u, v0 + (v1 - v0) * j / sv));
+      lines.push({ p, c: style.uc ? style.uc(i, nu) : 0 });
+    }
+    for (let j = 0; j <= nv; j++) {
+      const v = v0 + (v1 - v0) * j / nv, p = [];
+      for (let i = 0; i <= su; i++) p.push(...f(u0 + (u1 - u0) * i / su, v));
+      lines.push({ p, c: style.vc ? style.vc(j, nv) : 0 });
+    }
+    return lines;
+  }
+
+  // Each builder returns { lines: [{ p: number[] (xyz...), c: 0 ink | 1 accent }], yaw, pitch, ... }.
+  // fit() then centres the figure and scales it into the unit ball, so no rotation can clip it.
   const objects = {
-    brownian: {
-      name: 'Brownian paths, settling into a Gaussian',
-      tag: 'Random walk',
-      eq: 'dX<sub>t</sub> = σ dW<sub>t</sub>, X<sub>0</sub> = 0 &nbsp;⇒&nbsp; X<sub>T</sub> ∼ 𝒩(0, σ<sup>2</sup>T)',
-      label: 'Brownian motion sample paths fanning out over time, with the Gaussian density of their endpoints drawn as a surface at the final time.',
+    zeta: {
+      name: 'The Riemann zeta function along the critical line',
+      tag: 'Analytic number theory',
+      eq: 'ζ(s) = Σ<sub>n≥1</sub> n<sup>−s</sup>, &nbsp;Re s &gt; 1, &nbsp;continued analytically, &nbsp;drawn at s = ½ + it',
+      label: 'The values of the Riemann zeta function on the critical line, ζ(1/2 + it), drawn in three dimensions with height t: the curve loops repeatedly and passes through the central axis at each nontrivial zero.',
       build() {
-        const lines = [], N = 28, S = 120, x0 = -1, x1 = 0.55, sc = 0.5;
-        for (let n = 0; n < N; n++) {
-          const z = -0.55 + 1.1 * (n / (N - 1));
-          let w = 0; const p = [x0, 0, z];
-          for (let s = 1; s <= S; s++) { w += gauss() * Math.sqrt(1 / S); p.push(x0 + (x1 - x0) * s / S, Math.max(-1.25, Math.min(1.25, w * sc)), z); }
-          lines.push({ p, c: 0 });
+        const T0 = 0.2, T1 = 50 + rnd() * 6, H = 6 / (T1 - T0), lines = [];
+        const sigmas = [0.5, 0.4, 0.6];
+        for (const s of sigmas) {
+          const p = [];
+          for (let t = T0; t <= T1; t += 0.03) { const z = zeta(s, t); p.push(z[0], (t - T0) * H, z[1]); }
+          lines.push({ p, c: 0, w: s === 0.5 ? 1 : 0.5 });
         }
-        // density surface at t = T: bulges forward along time, across the depth of the sheet
-        const dens = y => Math.exp(-(y * y) / (2 * sc * sc));
-        for (let k = 0; k <= 8; k++) {
-          const z = -0.55 + 1.1 * k / 8, p = [];
-          for (let j = 0; j <= 60; j++) { const y = -1.25 + 2.5 * j / 60; p.push(x1 + 0.42 * dens(y), y, z); }
-          lines.push({ p, c: 1 });
+        // the axis Re ζ = Im ζ = 0, with a tick at each zero the critical-line curve passes through
+        lines.push({ p: [0, 0, 0, 0, (T1 - T0) * H, 0], c: 1, w: 0.5 });
+        for (const g of [14.134725, 21.022040, 25.010858, 30.424876, 32.935062, 37.586178, 40.918719, 43.327073, 48.005151, 49.773832, 52.970321, 56.446248]) {
+          if (g > T1) break;
+          const y = (g - T0) * H, r = 0.22;
+          lines.push({ p: [-r, y, 0, r, y, 0], c: 1 }, { p: [0, y, -r, 0, y, r], c: 1 });
         }
-        for (let j = 0; j <= 12; j++) {
-          const y = -1.1 + 2.2 * j / 12, p = [];
-          for (let k = 0; k <= 8; k++) p.push(x1 + 0.42 * dens(y), y, -0.55 + 1.1 * k / 8);
-          lines.push({ p, c: 1, w: 0.5 });
-        }
-        return { lines, yaw: -0.62, pitch: 0.32 };
+        return { lines, yaw: 0.5, pitch: 1.0 };
+      }
+    },
+    enneper: {
+      name: 'Enneper’s minimal surface',
+      tag: 'Differential geometry',
+      eq: 'x = u − u<sup>3</sup>/3 + uv<sup>2</sup>, &nbsp;y = v − v<sup>3</sup>/3 + u<sup>2</sup>v, &nbsp;z = u<sup>2</sup> − v<sup>2</sup>',
+      label: 'Enneper’s minimal surface, a saddle whose edge folds back over itself, drawn as a wire mesh of circles and radial lines in polar coordinates.',
+      build() {
+        const R = 1.55 + 0.25 * rnd();
+        const f = (r, th) => { const u = r * Math.cos(th), v = r * Math.sin(th); return [u - u * u * u / 3 + u * v * v, u * u - v * v, v - v * v * v / 3 + u * u * v]; };
+        const lines = mesh(f, 0.02, R, 0, TAU, 16, 48, 60, 220, { uc: (i, n) => (i === n ? 1 : 0) });
+        return { lines, yaw: 0.6, pitch: 0.42, alpha: 0.85 };
+      }
+    },
+    cyclide: {
+      name: 'A Dupin cyclide, every curvature line a circle',
+      tag: 'Inversive geometry',
+      eq: '(x<sup>2</sup> + y<sup>2</sup> + z<sup>2</sup> + b<sup>2</sup> − d<sup>2</sup>)<sup>2</sup> = 4(ax − cd)<sup>2</sup> + 4b<sup>2</sup>y<sup>2</sup>, &nbsp;c<sup>2</sup> = a<sup>2</sup> − b<sup>2</sup>',
+      label: 'A ring-shaped Dupin cyclide, thick on one side and thin on the other, drawn along its lines of curvature, all of which are circles.',
+      build() {
+        const a = 1, b = 0.84 + 0.06 * rnd(), c = Math.sqrt(a * a - b * b), d = 0.36 + 0.06 * rnd();
+        const f = (u, v) => {
+          const den = a - c * Math.cos(u) * Math.cos(v);
+          return [
+            (d * (c - a * Math.cos(u) * Math.cos(v)) + b * b * Math.cos(u)) / den,
+            b * Math.sin(v) * (c * Math.cos(u) - d) / den,
+            b * Math.sin(u) * (a - d * Math.cos(v)) / den
+          ];
+        };
+        const lines = mesh(f, 0, TAU, 0, TAU, 48, 20, 160, 80, { vc: j => (j === 0 ? 1 : 0), uc: i => (i === 14 ? 1 : 0) });
+        return { lines, yaw: -0.5, pitch: 0.62, alpha: 0.8 };
+      }
+    },
+    dini: {
+      name: 'Dini’s surface, a twisted pseudosphere',
+      tag: 'Constant negative curvature',
+      eq: 'x = a cos u sin v, &nbsp;y = a sin u sin v, &nbsp;z = a(cos v + ln tan(v/2)) + bu',
+      label: 'Dini’s surface: a pseudosphere twisted into a spiral horn, with constant negative Gaussian curvature, drawn as a wire mesh.',
+      build() {
+        const A = 1, B = 0.15 + 0.04 * rnd(), U = 4 * Math.PI;
+        const f = (u, v) => [A * Math.cos(u) * Math.sin(v), A * (Math.cos(v) + Math.log(Math.tan(v / 2))) + B * u, A * Math.sin(u) * Math.sin(v)];
+        const lines = mesh(f, 0, U, 0.06, 1.75, 80, 12, 300, 60, { vc: (j, n) => (j === n ? 1 : 0) });
+        return { lines, yaw: 0.3, pitch: 0.18, alpha: 0.8, tilt: -0.42 };
       }
     },
     smile: {
@@ -58,49 +132,25 @@
       eq: 'w(k) = a + b{ρ(k − m) + √((k − m)<sup>2</sup> + s<sup>2</sup>)}, &nbsp;σ<sub>BS</sub> = √(w/τ)',
       label: 'An illustrative implied-volatility surface across log-moneyness and maturity, generated from a raw SVI parameterisation, not market data.',
       build() {
-        const rho = -0.35 - 0.3 * rnd(), m = 0.02 + 0.04 * rnd();
+        const rho = -0.35 - 0.3 * rnd(), m = 0.02 + 0.04 * rnd(), b = 0.09 + 0.03 * rnd();
         const vol = (k, tau) => {
-          const a = 0.012 + 0.028 * tau, b = 0.09 + 0.03 * rnd() * 0, s = 0.08 + 0.12 * tau;
+          const a = 0.012 + 0.028 * tau, s = 0.08 + 0.12 * tau;
           const w = a + b * (rho * (k - m) + Math.sqrt((k - m) * (k - m) + s * s));
           return Math.sqrt(Math.max(w, 1e-6) / tau);
         };
-        const K = 40, T = 18, ks = [], ts = [];
+        const K = 120, T = 22, ks = [], ts = [];
         for (let i = 0; i <= K; i++) ks.push(-0.6 + 1.2 * i / K);
         for (let j = 0; j <= T; j++) ts.push(0.08 + 1.9 * j / T);
         let lo = Infinity, hi = -Infinity;
         const grid = ts.map(tau => ks.map(k => { const v = vol(k, tau); lo = Math.min(lo, v); hi = Math.max(hi, v); return v; }));
-        const Y = v => -0.55 + 1.15 * (v - lo) / (hi - lo);
+        const Y = v => -0.55 + 1.0 * (v - lo) / (hi - lo);
         const X = i => -0.9 + 1.8 * i / K, Z = j => -0.8 + 1.6 * j / T;
         const lines = [];
         grid.forEach((row, j) => { const p = []; row.forEach((v, i) => p.push(X(i), Y(v), Z(j))); lines.push({ p, c: j === 0 ? 1 : 0 }); });
-        for (let i = 0; i <= K; i += 4) { const p = []; for (let j = 0; j <= T; j++) p.push(X(i), Y(grid[j][i]), Z(j)); lines.push({ p, c: 0, w: 0.55 }); }
+        for (let i = 0; i <= K; i += 8) { const p = []; for (let j = 0; j <= T; j++) p.push(X(i), Y(grid[j][i]), Z(j)); lines.push({ p, c: 0, w: 0.5 }); }
+        // floor frame, hairline, so the surface reads as standing over the (k, τ) plane
+        lines.push({ p: [X(0), -0.6, Z(0), X(K), -0.6, Z(0), X(K), -0.6, Z(T), X(0), -0.6, Z(T), X(0), -0.6, Z(0)], c: 0, w: 0.5 });
         return { lines, yaw: 0.42, pitch: 0.38 };
-      }
-    },
-    ou: {
-      name: 'Ornstein–Uhlenbeck: mean reversion',
-      tag: 'Spread dynamics',
-      eq: 'dX<sub>t</sub> = κ(θ − X<sub>t</sub>) dt + σ dW<sub>t</sub>',
-      label: 'Ornstein–Uhlenbeck sample paths starting far apart and reverting toward a common mean, inside the stationary band.',
-      build() {
-        const lines = [], N = 22, S = 120, kappa = 1.9 + rnd() * 0.6, sig = 0.24, dt = 1.6 / S, x0 = -1, x1 = 1;
-        for (let n = 0; n < N; n++) {
-          const z = -0.7 + 1.4 * n / (N - 1);
-          let x = -1 + 2 * n / (N - 1) + 0.08 * gauss();
-          const p = [x0, x, z];
-          for (let s = 1; s <= S; s++) {
-            x += kappa * (0 - x) * dt + sig * Math.sqrt(dt) * gauss();
-            p.push(x0 + (x1 - x0) * s / S, Math.max(-1.2, Math.min(1.2, x)), z);
-          }
-          lines.push({ p, c: 0 });
-        }
-        const band = sig / Math.sqrt(2 * kappa);
-        [-band, 0, band].forEach((y, i) => {
-          lines.push({ p: [x0, y, -0.7, x1, y, -0.7], c: 1, w: i === 1 ? 1 : 0.5 });
-          lines.push({ p: [x1, y, -0.7, x1, y, 0.7], c: 1, w: i === 1 ? 1 : 0.5 });
-          lines.push({ p: [x0, y, 0.7, x1, y, 0.7], c: 1, w: 0.5 });
-        });
-        return { lines, yaw: -0.3, pitch: 0.3 };
       }
     },
     lorenz: {
@@ -109,7 +159,7 @@
       eq: 'ẋ = σ(y − x), &nbsp;ẏ = x(ρ − z) − y, &nbsp;ż = xy − βz',
       label: 'A Lorenz trajectory whose two lobes are shaded as two market regimes; the path switches between them irregularly.',
       build() {
-        const s = 10, r = 28, b = 8 / 3, h = 0.006;
+        const s = 10, r = 28, b = 8 / 3, h = 0.005;
         let x = 0.1 + rnd(), y = rnd(), z = 20 + rnd() * 5;
         const f = (x, y, z) => [s * (y - x), x * (r - z) - y, x * y - b * z];
         const step = () => {
@@ -119,59 +169,32 @@
         };
         for (let i = 0; i < 1500; i++) step();
         const lines = []; let cur = null, side = null;
-        for (let i = 0; i < 7200; i++) {
+        for (let i = 0; i < 9000; i++) {
           step();
-          const P = [x / 22, (z - 25) / 22, y / 22];
+          const P = [x, z - 25, y];
           const sd = x >= 0 ? 1 : 0;
-          if (sd !== side) { if (cur) { cur.p.push(...P); } cur = { p: [...P], c: sd }; lines.push(cur); side = sd; }
+          if (sd !== side) { if (cur) cur.p.push(...P); cur = { p: [...P], c: sd }; lines.push(cur); side = sd; }
           else cur.p.push(...P);
         }
-        return { lines, yaw: 0.35, pitch: 0.15, serial: true };
-      }
-    },
-    book: {
-      name: 'Limit-order-book depth through time',
-      tag: 'Illustrative · synthetic',
-      eq: 'D<sup>a</sup>(p) = Σ<sub>i : a<sub>i</sub> ≤ p</sub> q<sub>i</sub><sup>a</sup>, &nbsp;D<sup>b</sup>(p) = Σ<sub>i : b<sub>i</sub> ≥ p</sub> q<sub>i</sub><sup>b</sup>',
-      label: 'An illustrative, synthetic order book: cumulative bid and ask depth around a drifting mid price, drawn for successive snapshots in time.',
-      build() {
-        const L = 30, T = 22, lines = [];
-        let mid = 0, maxD = 0;
-        const snaps = [];
-        const shape = Array.from({ length: L }, (_, i) => 0.4 + 0.9 * Math.exp(-((i - 9) ** 2) / 40) + 0.3 * rnd());
-        for (let t = 0; t < T; t++) {
-          mid += gauss() * 0.9;
-          const bids = [], asks = [];
-          let cb = 0, ca = 0;
-          for (let i = 0; i < L; i++) {
-            cb += shape[i] * (0.6 + 0.8 * rnd()) * (1 + 0.15 * Math.sin(t * 0.4 + i));
-            ca += shape[i] * (0.6 + 0.8 * rnd()) * (1 + 0.15 * Math.cos(t * 0.35 + i));
-            bids.push(cb); asks.push(ca);
-          }
-          maxD = Math.max(maxD, cb, ca);
-          snaps.push({ mid, bids, asks });
-        }
-        const spanP = L + 8;
-        const X = p => p / spanP, Y = d => -0.7 + 1.45 * d / maxD, Z = t => -0.85 + 1.7 * t / (T - 1);
-        snaps.forEach((s, t) => {
-          const bp = [], ap = [];
-          for (let i = L - 1; i >= 0; i--) bp.push(X(s.mid - 1 - i), Y(s.bids[i]), Z(t));
-          bp.push(X(s.mid - 1), Y(0), Z(t));
-          ap.push(X(s.mid + 1), Y(0), Z(t));
-          for (let i = 0; i < L; i++) ap.push(X(s.mid + 1 + i), Y(s.asks[i]), Z(t));
-          lines.push({ p: bp, c: 0 }); lines.push({ p: ap, c: 1 });
-        });
-        for (let i = 4; i < L; i += 5) {
-          const bl = [], al = [];
-          snaps.forEach((s, t) => { bl.push(X(s.mid - 1 - i), Y(s.bids[i]), Z(t)); al.push(X(s.mid + 1 + i), Y(s.asks[i]), Z(t)); });
-          lines.push({ p: bl, c: 0, w: 0.5 }); lines.push({ p: al, c: 1, w: 0.5 });
-        }
-        const mp = []; snaps.forEach((s, t) => mp.push(X(s.mid), -0.7, Z(t)));
-        lines.push({ p: mp, c: 1, w: 0.8 });
-        return { lines, yaw: -0.38, pitch: 0.42 };
+        return { lines, yaw: 0.35, pitch: 0.15, serial: true, alpha: 0.9 };
       }
     }
   };
+
+  // Centre (bounding-box centre or centroid) and scale into the unit ball.
+  function fit(model) {
+    let mx = [Infinity, Infinity, Infinity], Mx = [-Infinity, -Infinity, -Infinity];
+    for (const l of model.lines) for (let i = 0; i < l.p.length; i += 3) for (let k = 0; k < 3; k++) { mx[k] = Math.min(mx[k], l.p[i + k]); Mx[k] = Math.max(Mx[k], l.p[i + k]); }
+    const c = [0, 1, 2].map(k => (mx[k] + Mx[k]) / 2);
+    let r = 0;
+    for (const l of model.lines) for (let i = 0; i < l.p.length; i += 3) r = Math.max(r, Math.hypot(l.p[i] - c[0], l.p[i + 1] - c[1], l.p[i + 2] - c[2]));
+    for (const l of model.lines) { const q = new Float32Array(l.p.length); for (let i = 0; i < l.p.length; i += 3) for (let k = 0; k < 3; k++) q[i + k] = (l.p[i + k] - c[k]) / r; l.p = q; }
+    if (model.tilt) { // a fixed roll, so a tall figure leans into the frame and its sway reads as a slow precession
+      const ct = Math.cos(model.tilt), st = Math.sin(model.tilt);
+      for (const l of model.lines) for (let i = 0; i < l.p.length; i += 3) { const x = l.p[i], y = l.p[i + 1]; l.p[i] = ct * x - st * y; l.p[i + 1] = st * x + ct * y; }
+    }
+    return model;
+  }
   const keys = Object.keys(objects);
 
   // ---------- state ----------
@@ -184,12 +207,12 @@
   function choose(k) {
     key = k;
     const o = objects[k];
-    model = o.build();
+    model = fit(o.build());
     total = model.lines.reduce((a, l) => a + l.p.length / 3, 0);
     baseYaw = model.yaw; phase = 0; yaw = baseYaw; pitch = model.pitch;
     if (nameEl) nameEl.textContent = o.name;
     if (tagEl) tagEl.textContent = o.tag;
-    if (eqEl) eqEl.innerHTML = o.eq;
+    if (eqEl) eqEl.innerHTML = o.eq.split(', &nbsp;').map(t => `<span class="nw">${t}</span>`).join(', ');
     canvas.setAttribute('aria-label', o.label + ' Drag or use the arrow keys to rotate; press Space to pause.');
     progress = reduced.matches ? 1 : 0; born = performance.now();
     kick();
@@ -207,47 +230,52 @@
     draw();
   }
 
-  const BUCKETS = 7;
+  // Depth cue: segments are binned by depth into BUCKETS paths per colour; far = faint and thin, near = darker.
+  const BUCKETS = 10;
   const paths = [[], []];
   function draw() {
     if (!model || !w) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, w, h);
     const cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
-    const R = Math.min(w, h) * 0.36, ox = w / 2, oy = h / 2, cam = 3.6;
+    // figures live in the unit ball; with cam = 3.6 the widest projected extent is ~1.04, so 0.46 keeps a margin
+    const R = Math.min(w, h) * 0.46, ox = w / 2, oy = h / 2, cam = 3.6;
     for (let c = 0; c < 2; c++) for (let b = 0; b < BUCKETS; b++) paths[c][b] = new Path2D();
     const ease = 1 - Math.pow(1 - progress, 3);
     // serial objects (one long trajectory) draw in sequence; the rest grow together
     let budget = model.serial ? Math.floor(total * ease) : Infinity;
     for (const line of model.lines) {
       const p = line.p, n = p.length / 3;
-      let upto = model.serial ? Math.min(n, budget) : Math.max(2, Math.floor(n * ease));
+      const upto = model.serial ? Math.min(n, budget) : Math.max(2, Math.floor(n * ease));
       if (model.serial) budget -= upto;
       if (upto < 2) { if (model.serial) break; continue; }
+      const faint = line.w && line.w < 0.7 ? 3 : 0;
       let px = 0, py = 0, pz = 0;
       for (let i = 0; i < upto; i++) {
         const x = p[3 * i], y = p[3 * i + 1], z = p[3 * i + 2];
-        // yaw about vertical axis, then pitch about horizontal axis
+        // yaw about the vertical axis, then pitch about the horizontal axis
         const x1 = cy * x + sy * z, z1 = -sy * x + cy * z;
         const y2 = cp * y - sp * z1, z2 = sp * y + cp * z1;
         const s = cam / (cam + z2);
         const X = ox + x1 * R * s, Y = oy - y2 * R * s;
         if (i > 0) {
-          const zm = (z2 + pz) / 2; // -1.7 (near) .. 1.7 (far)
-          let bk = Math.floor((1 - (zm + 1.7) / 3.4) * BUCKETS);
+          const zm = (z2 + pz) / 2; // -1 (near) .. 1 (far)
+          let bk = Math.floor((1 - zm) * 0.5 * BUCKETS) - faint;
           bk = bk < 0 ? 0 : bk >= BUCKETS ? BUCKETS - 1 : bk;
-          const path = paths[line.c][line.w && line.w < 0.7 ? Math.max(0, bk - 2) : bk];
+          const path = paths[line.c][bk];
           path.moveTo(px, py); path.lineTo(X, Y);
         }
         px = X; py = Y; pz = z2;
       }
     }
+    const k = model.alpha || 1;
     for (let c = 0; c < 2; c++) {
       const col = c ? ACC : INK;
       for (let b = 0; b < BUCKETS; b++) {
-        const a = 0.12 + 0.7 * Math.pow(b / (BUCKETS - 1), 1.4);
-        ctx.strokeStyle = `rgba(${col[0]},${col[1]},${col[2]},${(c ? a * 1.05 : a * 0.92).toFixed(3)})`;
-        ctx.lineWidth = 0.55 + 0.6 * b / (BUCKETS - 1);
+        const t = b / (BUCKETS - 1);
+        const a = k * (0.07 + 0.78 * Math.pow(t, 1.6));
+        ctx.strokeStyle = `rgba(${col[0]},${col[1]},${col[2]},${(c ? Math.min(1, a * 1.1) : a).toFixed(3)})`;
+        ctx.lineWidth = 0.5 + 0.7 * t;
         ctx.stroke(paths[c][b]);
       }
     }
@@ -321,5 +349,5 @@
 
   choose(key);
   resize();
-  window.__hero = { choose, keys, set paused(v) { paused = v; } };
+  window.__hero = { choose, keys, draw, set paused(v) { paused = v; } };
 })();

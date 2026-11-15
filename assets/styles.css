@@ -135,6 +135,7 @@ main:focus, main:focus-visible { outline: none; }
 .hero-title .tag { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .hero-eq { font-size: 17px; font-style: italic; color: var(--ink-2); min-height: 1.6em; }
 .hero-eq .up { font-style: normal; }
+.hero-eq .nw { white-space: nowrap; }
 .hero-hint { font-size: 14px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; }
 .hero-hint .dot { color: var(--faint); }
 @media (pointer: coarse) { .hero-hint .kb-only { display: none; } }
