@@ -20,27 +20,6 @@
   const rnd = Math.random;
   const TAU = 2 * Math.PI;
 
-  // Riemann zeta by Euler–Maclaurin summation (|error| < 1e-10 for |t| ≤ 100; checked against mpmath).
-  const BERN = [1 / 6, -1 / 30, 1 / 42, -1 / 30, 5 / 66, -691 / 2730, 7 / 6, -3617 / 510];
-  function npow(n, er, ei) { const l = Math.log(n), m = Math.exp(er * l), a = ei * l; return [m * Math.cos(a), m * Math.sin(a)]; }
-  function zeta(sr, si) {
-    const N = Math.ceil(Math.abs(si) / TAU) + 16;
-    let ar = 0, ai = 0;
-    for (let n = 1; n < N; n++) { const q = npow(n, -sr, -si); ar += q[0]; ai += q[1]; }
-    { const q = npow(N, 1 - sr, -si), dr = sr - 1, di = si, d = dr * dr + di * di; ar += (q[0] * dr + q[1] * di) / d; ai += (q[1] * dr - q[0] * di) / d; }
-    { const q = npow(N, -sr, -si); ar += q[0] / 2; ai += q[1] / 2; }
-    let pr = sr, pi = si, fact = 2;
-    for (let k = 1; k <= 8; k++) {
-      if (k > 1) {
-        for (const c of [2 * k - 3, 2 * k - 2]) { const r = pr * (sr + c) - pi * si, i = pr * si + pi * (sr + c); pr = r; pi = i; }
-        fact *= (2 * k - 1) * (2 * k);
-      }
-      const q = npow(N, -sr - 2 * k + 1, -si), f = BERN[k - 1] / fact;
-      ar += (pr * q[0] - pi * q[1]) * f; ai += (pr * q[1] + pi * q[0]) * f;
-    }
-    return [ar, ai];
-  }
-
   // Grid helper: f(u, v) -> [x, y, z]; draws `nu` u-lines and `nv` v-lines, each finely sampled.
   function mesh(f, u0, u1, v0, v1, nu, nv, su, sv, style = {}) {
     const lines = [];
@@ -60,27 +39,24 @@
   // Each builder returns { lines: [{ p: number[] (xyz...), c: 0 ink | 1 accent }], yaw, pitch, ... }.
   // fit() then centres the figure and scales it into the unit ball, so no rotation can clip it.
   const objects = {
-    zeta: {
-      name: 'The Riemann zeta function along the critical line',
-      tag: 'Analytic number theory',
-      eq: 'ζ(s) = Σ<sub>n≥1</sub> n<sup>−s</sup>, &nbsp;Re s &gt; 1, &nbsp;continued analytically, &nbsp;drawn at s = ½ + it',
-      label: 'The values of the Riemann zeta function on the critical line, ζ(1/2 + it), drawn in three dimensions with height t: the curve loops repeatedly and passes through the central axis at each nontrivial zero.',
+    breather: {
+      name: 'A breather surface',
+      tag: 'Sine-Gordon soliton',
+      eq: 'φ<sub>uv</sub> = sin φ',
+      label: 'A breather surface: a surface of constant negative curvature built from the breather solution of the sine-Gordon equation, a ring of scalloped lobes around a narrow throat, drawn as a wire mesh with its cuspidal rim highlighted.',
+      // a = 0.4: the classic 13-lobed breather; v ∈ [−37.4, 37.4] closes it up to a sliver, u ∈ [−6.5, 6.5] trims the long spines
       build() {
-        const T0 = 0.2, T1 = 50 + rnd() * 6, H = 6 / (T1 - T0), lines = [];
-        const sigmas = [0.5, 0.4, 0.6];
-        for (const s of sigmas) {
-          const p = [];
-          for (let t = T0; t <= T1; t += 0.03) { const z = zeta(s, t); p.push(z[0], (t - T0) * H, z[1]); }
-          lines.push({ p, c: 0, w: s === 0.5 ? 1 : 0.5 });
-        }
-        // the axis Re ζ = Im ζ = 0, with a tick at each zero the critical-line curve passes through
-        lines.push({ p: [0, 0, 0, 0, (T1 - T0) * H, 0], c: 1, w: 0.5 });
-        for (const g of [14.134725, 21.022040, 25.010858, 30.424876, 32.935062, 37.586178, 40.918719, 43.327073, 48.005151, 49.773832, 52.970321, 56.446248]) {
-          if (g > T1) break;
-          const y = (g - T0) * H, r = 0.22;
-          lines.push({ p: [-r, y, 0, r, y, 0], c: 1 }, { p: [0, y, -r, 0, y, r], c: 1 });
-        }
-        return { lines, yaw: 0.5, pitch: 1.0 };
+        const a = 0.4, wq = Math.sqrt(1 - a * a);
+        const f = (u, v) => {
+          const ch = Math.cosh(a * u), sh = Math.sinh(a * u), d = a * ((wq * ch) ** 2 + (a * Math.sin(wq * v)) ** 2);
+          return [
+            2 * wq * ch * (-(wq * Math.cos(v) * Math.cos(wq * v)) - Math.sin(v) * Math.sin(wq * v)) / d,
+            -u + 2 * (1 - a * a) * ch * sh / d,
+            2 * wq * ch * (-(wq * Math.sin(v) * Math.cos(wq * v)) + Math.cos(v) * Math.sin(wq * v)) / d
+          ];
+        };
+        const lines = mesh(f, -6.5, 6.5, -37.4, 37.4, 18, 150, 160, 1400, { uc: (i, n) => (i === n / 2 ? 1 : 0) });
+        return { lines, yaw: 0.4, pitch: 0.25, alpha: 0.75, tilt: -1.2 };
       }
     },
     enneper: {
@@ -349,5 +325,5 @@
 
   choose(key);
   resize();
-  window.__hero = { choose, keys, draw, set paused(v) { paused = v; } };
+  window.__hero = { choose, keys, set paused(v) { paused = v; } };
 })();
