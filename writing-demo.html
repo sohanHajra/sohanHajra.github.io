@@ -21,6 +21,7 @@
 .card2 .row { display:flex; flex-wrap:wrap; align-items:baseline; gap: 8px 28px; }
 .cta { font-family: var(--mono); font-size: 13px; letter-spacing:.04em; color: var(--accent); }
 .sec { position:relative; z-index:2; display:flex; flex-wrap:wrap; gap: 4px 18px; font-size: 15px; color: var(--muted); }
+.rt { font-family: var(--mono); font-size: 12.5px; color: var(--muted); }
 .status.done { color: var(--ink-2); }
 @media (max-width: 720px) { .htv { grid-template-columns: 1fr; gap: 2px; } .htv dd { margin-bottom: 10px; } }
 </style></head>
@@ -34,39 +35,27 @@
 <p class="kicker">Writing</p>
 <h1 class="section-title">Proposals, one a week.</h1>
 <p class="section-lede">Each post is a research question taken from a one-page proposal to running code, with what I believed, what broke, and what I believe now.</p>
-<p class="state">State A · today, while the test is running</p>
+<p class="state">Today, while the test runs</p>
 <div class="group"><div class="group-head"><h2>Posts</h2><span class="aside">A new proposal each week</span></div>
 <ol class="posts"><li class="post card2">
   <div class="entry-index">01</div>
   <div>
-    <h3><a class="stretch" href="#">From Signal to Fill</a></h3>
+    <h3><a class="stretch" href="writing/01-signal-to-fill.html">From Signal to Fill</a></h3>
     <p class="q">When market conditions are matched, does extra delay between a trading decision and its order&rsquo;s outcome cost price or fills?</p>
-    <dl class="htv">
-      <dt>Hypothesis</dt><dd>Latency cost rises with delay: the cost keeps climbing from 1 ms to 500 ms, and at 500 ms it averages at least 0.1 bps on each test day.</dd>
-      <dt>Test setup</dt><dd>The same randomly timed decisions replayed at nine delays from 1 to 500 ms on Binance USD-M BTCUSDT, built on one dev day, judged on two held-out test days.</dd>
-      <dt>Verdict</dt><dd><span class="pending">Written only after the test days are run</span></dd>
-    </dl>
-    <div class="row"><span class="cta">Read the lab notebook <span aria-hidden="true">→</span></span>
-      <span class="sec"><a href="https://github.com/sohanHajra/Proposals/blob/main/01-signal-to-fill/PROPOSAL.md" target="_blank" rel="noopener">Proposal<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a><a href="https://github.com/sohanHajra/Proposals/blob/main/01-signal-to-fill/PREREGISTRATION.md" target="_blank" rel="noopener">Preregistration<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a><a href="https://github.com/sohanHajra/Proposals/blob/main/01-signal-to-fill/LAB_NOTEBOOK.md" target="_blank" rel="noopener">Lab notebook<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a></span></div>
+    <div class="row"><span class="cta">Read the full story <span aria-hidden="true">→</span></span><span class="rt">8 min read · <span aria-hidden="true">▶</span> listen</span></div>
   </div>
   <div class="meta"><span class="status live">In progress</span><span>Release planned Nov 22, 2026</span></div>
 </li></ol></div>
-<p class="state">State B · after release, the whole card opens the full post</p>
+<p class="state">After release (click the card to open the reader)</p>
 <div class="group"><div class="group-head"><h2>Posts</h2><span class="aside">A new proposal each week</span></div>
 <ol class="posts"><li class="post card2">
   <div class="entry-index">01</div>
   <div>
-    <h3><a class="stretch" href="#">From Signal to Fill</a></h3>
+    <h3><a class="stretch" href="writing/01-signal-to-fill.html">From Signal to Fill</a></h3>
     <p class="q">When market conditions are matched, does extra delay between a trading decision and its order&rsquo;s outcome cost price or fills?</p>
-    <dl class="htv">
-      <dt>Hypothesis</dt><dd>Latency cost rises with delay: the cost keeps climbing from 1 ms to 500 ms, and at 500 ms it averages at least 0.1 bps on each test day.</dd>
-      <dt>Test setup</dt><dd>The same randomly timed decisions replayed at nine delays from 1 to 500 ms on Binance USD-M BTCUSDT, built on one dev day, judged on two held-out test days.</dd>
-      <dt>Verdict</dt><dd><span class="chip">[Supported / Not supported / Inconclusive]</span> <span class="pending">[headline number, traced by claimcheck]</span></dd>
-    </dl>
-    <div class="row"><span class="cta">Read the full story <span aria-hidden="true">→</span></span>
-      <span class="sec"><a href="https://github.com/sohanHajra/Proposals/blob/main/01-signal-to-fill/PROPOSAL.md" target="_blank" rel="noopener">Proposal<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a><a href="https://github.com/sohanHajra/Proposals/blob/main/01-signal-to-fill/PREREGISTRATION.md" target="_blank" rel="noopener">Preregistration<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a><a href="https://github.com/sohanHajra/Proposals/blob/main/01-signal-to-fill/LAB_NOTEBOOK.md" target="_blank" rel="noopener">Lab notebook<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a></span></div>
+    <div class="row"><span class="cta">Read the full story <span aria-hidden="true">→</span></span><span class="rt">8 min read · <span aria-hidden="true">▶</span> listen</span></div>
   </div>
-  <div class="meta"><span class="status done">Released</span><span>Nov 22, 2026</span><span>8 min read</span></div>
+  <div class="meta"><span class="chip">[Verdict]</span><span>Nov 22, 2026</span></div>
 </li></ol></div>
 </section></main>
 <footer class="site-footer"><span>© <span data-year>2026</span> Sohan Hajra</span><ul class="social" aria-label="Elsewhere"><li><a href="https://github.com/sohanHajra" target="_blank" rel="noopener" title="GitHub"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9.2 20.6c-3.6-.9-6-3.9-6-7.6 0-1.6.5-3.1 1.5-4.3-.3-1.1-.3-2.4.2-3.6 1.3 0 2.6.6 3.6 1.4 1.1-.3 2.3-.5 3.5-.5s2.4.2 3.5.5c1-.8 2.3-1.4 3.6-1.4.5 1.2.5 2.5.2 3.6 1 1.2 1.5 2.7 1.5 4.3 0 3.7-2.4 6.7-6 7.6"/><path d="M14.8 20.6v-2.4c0-.9-.3-1.6-.9-2.1 2.1-.3 3.6-1.5 3.6-3.9"/><path d="M9.2 20.6v-2.4c0-.9.3-1.6.9-2.1-2.1-.3-3.6-1.5-3.6-3.9"/><path d="M9.2 18.7c-2.3.5-3.1-.7-3.9-1.9"/></svg><span class="visually-hidden">GitHub</span><span class="visually-hidden"> (opens in a new tab)</span></a></li><li><a href="https://www.linkedin.com/in/sohan-hajra/" target="_blank" rel="noopener" title="LinkedIn"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><path d="M8 10.6V17"/><circle cx="8" cy="7.6" r=".55" fill="currentColor"/><path d="M11.4 17v-6.4M11.4 13.4c0-1.7 1.1-2.9 2.6-2.9s2.5 1.1 2.5 2.9V17"/></svg><span class="visually-hidden">LinkedIn</span><span class="visually-hidden"> (opens in a new tab)</span></a></li><li><a href="mailto:sohancollege27@gmail.com" title="Email"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="5.5" width="18" height="13" rx="1.8"/><path d="m3.6 6.6 8.4 6.6 8.4-6.6"/></svg><span class="visually-hidden">Email sohancollege27@gmail.com</span></a></li></ul></footer>
