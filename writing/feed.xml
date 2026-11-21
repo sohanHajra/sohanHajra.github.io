@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="feed.xsl"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Sohan Hajra · Writing [DEMO FEED]</title>
+    <link>https://sohanhajra.github.io/#writing</link>
+    <atom:link href="https://sohanhajra.github.io/writing/feed.xml" rel="self" type="application/rss+xml"/>
+    <description>Research proposals taken from a one-page question to running code: what I believed, what broke, and what I believe now.</description>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 24 Nov 2026 18:00:00 -0600</lastBuildDate>
+    <ttl>720</ttl>
+
+    <item>
+      <title>01.b · Sequel to From Signal to Fill: [01.b title]</title>
+      <link>https://sohanhajra.github.io/writing/01-signal-to-fill.html#s01b</link>
+      <guid isPermaLink="true">https://sohanhajra.github.io/writing/01-signal-to-fill.html#s01b</guid>
+      <pubDate>Tue, 24 Nov 2026 18:00:00 -0600</pubDate>
+      <category>Sequel</category>
+      <description>Verdict: [Verdict]. [One-sentence summary of what 01.b tested and found, numbers traced by claimcheck.] The original 01 verdict stays as released.</description>
+    </item>
+
+    <item>
+      <title>01 · From Signal to Fill</title>
+      <link>https://sohanhajra.github.io/writing/01-signal-to-fill.html</link>
+      <guid isPermaLink="true">https://sohanhajra.github.io/writing/01-signal-to-fill.html</guid>
+      <pubDate>Sun, 22 Nov 2026 18:00:00 -0600</pubDate>
+      <category>Proposal</category>
+      <description>When market conditions are matched, does extra delay between a trading decision and its order's outcome cost price or fills? Verdict: [Verdict]. [Headline number, traced by claimcheck.]</description>
+    </item>
+  </channel>
+</rss>
