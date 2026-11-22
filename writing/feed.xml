@@ -15,7 +15,7 @@
       <guid isPermaLink="true">https://sohanhajra.github.io/writing/01-signal-to-fill.html</guid>
       <pubDate>Sun, 22 Nov 2026 12:00:00 -0600</pubDate>
       <category>Proposal</category>
-      <description>When market conditions are matched, does extra delay between a trading decision and its order's outcome cost price or fills? Verdict: Inconclusive. Both primary tests are null, by design. A taker acting on order book imbalance paid 0.52 to 0.66 bps by 500 ms on the test days, an upper end.</description>
+      <description>When market conditions are matched, does extra delay between a trading decision and its order's outcome cost price or fills? Verdict: Inconclusive. Both primary tests are null, largely by design. A taker acting on order book imbalance paid 0.52 to 0.66 bps by 500 ms on the test days, an upper end.</description>
     </item>
   </channel>
 </rss>
