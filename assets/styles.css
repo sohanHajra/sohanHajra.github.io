@@ -348,3 +348,22 @@ td + td { font-family: var(--mono); font-size: 14.5px; }
 .field:has(.note-tag) { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
 .note-tag { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line); border-radius: 3px; padding: 1px 6px; white-space: nowrap; }
 .stats .k.bench { font-family: var(--mono); font-size: 12px; letter-spacing: .02em; }
+
+/* Writing: released proposal card (approved demo 2026-11-19), sequel line, RSS link */
+.card2 { position: relative; transition: background .3s var(--ease); }
+.card2:hover { background: linear-gradient(90deg, transparent, var(--accent-wash) 12%, var(--accent-wash) 88%, transparent); }
+.card2:hover h3 a { color: var(--accent); }
+.card2 .stretch::after { content:""; position:absolute; inset:0; z-index:1; }
+.card2 .q { color: var(--ink-2); font-style: italic; max-width: 38rem; margin-bottom: 18px; }
+.htv { display:grid; grid-template-columns: 112px minmax(0,1fr); gap: 8px 18px; margin: 0 0 20px; max-width: 42rem; font-size: 16.5px; }
+.htv dt { font-family: var(--mono); font-size: 11.5px; letter-spacing:.08em; text-transform: uppercase; color: var(--muted); padding-top: 5px; }
+.htv dd { margin:0; color: var(--ink-2); line-height:1.5; }
+.chip { font-family: var(--mono); font-size: 12px; border:1px solid var(--line-strong); padding: 2px 8px; color: var(--muted); }
+.card2 .row { display:flex; flex-wrap:wrap; align-items:baseline; gap: 8px 28px; }
+.cta { font-family: var(--mono); font-size: 13px; letter-spacing:.04em; color: var(--accent); }
+.sec { position:relative; z-index:2; display:flex; flex-wrap:wrap; gap: 4px 18px; font-size: 15px; color: var(--muted); }
+.status.done { color: var(--ink-2); }
+.rss { font-family: var(--mono); font-size: 12px; letter-spacing:.04em; color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--line-strong); margin-left: 14px; white-space: nowrap; }
+.rss:hover { color: var(--accent); border-color: var(--accent); }
+.rss svg { width: 11px; height: 11px; vertical-align: -1px; margin-right: 4px; }
+@media (max-width: 720px) { .htv { grid-template-columns: 1fr; gap: 2px; } .htv dd { margin-bottom: 10px; } }

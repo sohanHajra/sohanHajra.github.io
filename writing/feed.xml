@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="feed.xsl"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Sohan Hajra · Writing</title>
+    <link>https://sohanhajra.github.io/#writing</link>
+    <atom:link href="https://sohanhajra.github.io/writing/feed.xml" rel="self" type="application/rss+xml"/>
+    <description>Research proposals taken from a one-page question to running code: what I believed, what broke, and what I believe now.</description>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 22 Nov 2026 12:00:00 -0600</lastBuildDate>
+    <ttl>720</ttl>
+    <item>
+      <title>01 · From Signal to Fill</title>
+      <link>https://sohanhajra.github.io/writing/01-signal-to-fill.html</link>
+      <guid isPermaLink="true">https://sohanhajra.github.io/writing/01-signal-to-fill.html</guid>
+      <pubDate>Sun, 22 Nov 2026 12:00:00 -0600</pubDate>
+      <category>Proposal</category>
+      <description>When market conditions are matched, does extra delay between a trading decision and its order's outcome cost price or fills? Verdict: Inconclusive. Both primary tests are null, by design. A taker acting on order book imbalance paid 0.52 to 0.66 bps by 500 ms on the test days, an upper end.</description>
+    </item>
+  </channel>
+</rss>

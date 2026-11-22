@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>From Signal to Fill · Sohan Hajra</title>
+<meta name="description" content="Does extra delay between a trading decision and its order's outcome cost price or fills? Proposal 01, from question to running code.">
+<meta property="og:title" content="01 · From Signal to Fill">
+<meta property="og:type" content="article">
+<link rel="alternate" type="application/rss+xml" title="Sohan Hajra · Writing" href="feed.xml">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/fonts.css"><link rel="stylesheet" href="../assets/styles.css">
+<style>
+.progress { position: fixed; top: 0; left: 0; height: 2px; width: 0; background: var(--accent); z-index: 50; transition: width .1s linear; }
+.demo-note { font-family: var(--mono); font-size: 12px; color: var(--accent); background: var(--accent-wash); border:1px dashed var(--accent); padding: 10px 14px; margin: 28px auto 0; max-width: 38rem; }
+.reader { max-width: 38rem; margin: 0 auto; padding: 36px 0 40px; animation: rise .5s var(--ease) both; }
+@keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.reader .back { margin-bottom: 30px; }
+.reader h1 { font-size: clamp(36px, 5vw, 54px); line-height: 1.05; letter-spacing: -.02em; margin: 0 0 14px; }
+.reader .dek { font-size: 20px; font-style: italic; color: var(--ink-2); line-height: 1.5; margin: 0 0 22px; }
+.byline { display:flex; flex-wrap:wrap; gap: 4px 16px; font-family: var(--mono); font-size: 12.5px; color: var(--muted); padding-bottom: 22px; border-bottom: 1px solid var(--line); }
+.byline b { font-weight: 400; color: var(--accent); }
+.player { display:flex; align-items:center; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--line); margin-bottom: 8px; }
+.play { flex: none; width: 46px; height: 46px; border-radius: 50%; border: 1.5px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer; display:grid; place-items:center; transition: background .2s var(--ease), color .2s var(--ease); }
+.play:hover, .play[aria-pressed="true"] { background: var(--accent); color: var(--paper); }
+.play svg { width: 16px; height: 16px; }
+.pl-mid { flex: 1; min-width: 0; display:grid; gap: 6px; }
+.pl-label { font-size: 15.5px; color: var(--ink-2); }
+.pl-label small { font-family: var(--mono); font-size: 11.5px; color: var(--muted); margin-left: 8px; }
+.bar { height: 3px; background: var(--line); position: relative; cursor: pointer; border-radius: 2px; }
+.bar i { position:absolute; inset: 0 auto 0 0; width: 0; background: var(--accent); border-radius: 2px; }
+.speed { font-family: var(--mono); font-size: 12px; border: 1px solid var(--line-strong); background: transparent; color: var(--muted); padding: 4px 8px; cursor: pointer; }
+.tools { display:flex; justify-content: flex-end; gap: 6px; margin: 10px 0 0; }
+.tools button { font-family: var(--serif); border: 1px solid var(--line); background: transparent; color: var(--muted); padding: 2px 10px; cursor: pointer; }
+.body { font-size: var(--fs, 19.5px); line-height: 1.7; }
+.body h2 { font-size: 1.32em; margin: 2.1em 0 .5em; }
+.body p, .body li { color: var(--ink-2); }
+.body li::marker { color: var(--accent); }
+.tldr { border: 1px solid var(--line-strong); padding: 18px 22px; margin: 26px 0 8px; display:grid; grid-template-columns: 104px minmax(0,1fr); gap: 8px 16px; font-size: .86em; line-height: 1.55; }
+.tldr dt { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding-top: 4px; }
+.tldr dd { margin: 0; color: var(--ink-2); }
+.tldr .stamp { grid-column: 1 / -1; border-top: 1px dashed var(--line-strong); padding-top: 10px; margin-top: 4px; font-family: var(--mono); font-size: 11.5px; letter-spacing: .03em; color: var(--muted); }
+.tldr .stamp a { color: var(--muted); border-bottom: 1px solid var(--line-strong); text-decoration: none; }
+.tldr .stamp a:hover { color: var(--accent); border-color: var(--accent); }
+
+.ph { color: var(--faint); font-style: italic; }
+.fig { margin: 22px 0; } .fig img { width:100%; height:auto; display:block; border:1px solid var(--line); background:#fff; } .fig figcaption { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-top: 8px; line-height:1.5; }
+.player[hidden]{display:none}
+.endlinks { display:flex; flex-wrap:wrap; gap: 6px 22px; border-top: 1px solid var(--line); margin-top: 44px; padding-top: 18px; font-size: 16px; }
+.left { font-family: var(--mono); font-size: 11.5px; color: var(--muted); position: fixed; right: 18px; bottom: 16px; background: var(--paper); padding: 4px 8px; border: 1px solid var(--line); opacity: 0; transition: opacity .3s; }
+.left.on { opacity: 1; }
+@media (max-width: 720px) { .tldr { grid-template-columns: 1fr; gap: 2px; } .tldr dd { margin-bottom: 8px; } .body { --fs: 18px; } }
+</style></head>
+<body data-page="other">
+<div class="progress" id="progress"></div>
+<div class="site">
+<header class="site-header"><a class="brand" href="../index.html#about" aria-label="Sohan Hajra, home"><svg class="sigil" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><circle class="sigil-ring" cx="32" cy="32" r="30.5"/><path class="sigil-rose" pathLength="10" d="M35 26.8C35.8 25 36.4 23.1 36.8 21.3C37.1 19.5 37.2 17.8 37.1 16.2C37 14.7 36.7 13.3 36.2 12.1C35.8 11 35.1 10 34.4 9.4C33.6 8.8 32.8 8.5 32 8.5C31.2 8.5 30.4 8.8 29.6 9.4C28.9 10 28.2 11 27.8 12.1C27.3 13.3 27 14.7 26.9 16.2C26.8 17.8 26.9 19.5 27.2 21.3C27.6 23.1 28.2 25 29 26.8M36 36.5C37.5 37.8 39.1 38.9 40.7 39.8C42.3 40.7 43.9 41.4 45.4 41.8C46.9 42.1 48.4 42.3 49.6 42.2C50.9 42.1 51.9 41.7 52.7 41.2C53.5 40.7 54.1 40 54.3 39.3C54.6 38.5 54.6 37.6 54.2 36.7C53.8 35.8 53.2 34.9 52.2 34.1C51.3 33.3 50 32.6 48.6 32C47.1 31.4 45.4 31 43.6 30.8C41.8 30.5 39.9 30.5 37.9 30.7M26.5 34.4C24.8 35.4 23.2 36.6 21.9 37.8C20.5 39.1 19.4 40.4 18.6 41.7C17.7 43.1 17.2 44.4 16.9 45.6C16.6 46.8 16.6 47.9 16.8 48.9C17 49.8 17.5 50.5 18.2 51C18.9 51.5 19.7 51.7 20.7 51.7C21.6 51.6 22.7 51.2 23.7 50.6C24.8 49.9 25.9 49 26.9 47.8C27.9 46.6 28.8 45.1 29.6 43.4C30.4 41.8 31 39.9 31.4 38M31.4 26C31 24.1 30.4 22.2 29.6 20.6C28.8 18.9 27.9 17.4 26.9 16.2C25.9 15 24.8 14.1 23.7 13.4C22.7 12.8 21.6 12.4 20.7 12.3C19.7 12.3 18.9 12.5 18.2 13C17.5 13.5 17 14.2 16.8 15.1C16.6 16.1 16.6 17.2 16.9 18.4C17.2 19.6 17.7 20.9 18.6 22.3C19.4 23.6 20.5 24.9 21.9 26.2C23.2 27.4 24.8 28.6 26.5 29.6M37.9 33.3C39.9 33.5 41.8 33.5 43.6 33.2C45.4 33 47.1 32.6 48.6 32C50 31.4 51.3 30.7 52.2 29.9C53.2 29.1 53.8 28.2 54.2 27.3C54.6 26.4 54.6 25.5 54.3 24.7C54.1 24 53.5 23.3 52.7 22.8C51.9 22.3 50.9 21.9 49.6 21.8C48.4 21.7 46.9 21.9 45.4 22.2C43.9 22.6 42.3 23.3 40.7 24.2C39.1 25.1 37.5 26.2 36 27.5M29 37.2C28.2 39 27.6 40.9 27.2 42.7C26.9 44.5 26.8 46.2 26.9 47.8C27 49.3 27.3 50.7 27.8 51.9C28.2 53 28.9 54 29.6 54.6C30.4 55.2 31.2 55.5 32 55.5C32.8 55.5 33.6 55.2 34.4 54.6C35.1 54 35.8 53 36.2 51.9C36.7 50.7 37 49.3 37.1 47.8C37.2 46.2 37.1 44.5 36.8 42.7C36.4 40.9 35.8 39 35 37.2M28 27.5C26.5 26.2 24.9 25.1 23.3 24.2C21.7 23.3 20.1 22.6 18.6 22.2C17.1 21.9 15.6 21.7 14.4 21.8C13.1 21.9 12.1 22.3 11.3 22.8C10.5 23.3 9.9 24 9.7 24.7C9.4 25.5 9.4 26.4 9.8 27.3C10.2 28.2 10.8 29.1 11.8 29.9C12.7 30.7 14 31.4 15.4 32C16.9 32.6 18.6 33 20.4 33.2C22.2 33.5 24.1 33.5 26.1 33.3M37.5 29.6C39.2 28.6 40.8 27.4 42.1 26.2C43.5 24.9 44.6 23.6 45.4 22.3C46.3 20.9 46.8 19.6 47.1 18.4C47.4 17.2 47.4 16.1 47.2 15.1C47 14.2 46.5 13.5 45.8 13C45.1 12.5 44.3 12.3 43.3 12.3C42.4 12.4 41.3 12.8 40.3 13.4C39.2 14.1 38.1 15 37.1 16.2C36.1 17.4 35.2 18.9 34.4 20.6C33.6 22.2 33 24.1 32.6 26M32.6 38C33 39.9 33.6 41.8 34.4 43.4C35.2 45.1 36.1 46.6 37.1 47.8C38.1 49 39.2 49.9 40.3 50.6C41.3 51.2 42.4 51.6 43.3 51.7C44.3 51.7 45.1 51.5 45.8 51C46.5 50.5 47 49.8 47.2 48.9C47.4 47.9 47.4 46.8 47.1 45.6C46.8 44.4 46.3 43.1 45.4 41.7C44.6 40.4 43.5 39.1 42.1 37.8C40.8 36.6 39.2 35.4 37.5 34.4M26.1 30.7C24.1 30.5 22.2 30.5 20.4 30.8C18.6 31 16.9 31.4 15.4 32C14 32.6 12.7 33.3 11.8 34.1C10.8 34.9 10.2 35.8 9.8 36.7C9.4 37.6 9.4 38.5 9.7 39.3C9.9 40 10.5 40.7 11.3 41.2C12.1 41.7 13.1 42.1 14.4 42.2C15.6 42.3 17.1 42.1 18.6 41.8C20.1 41.4 21.7 40.7 23.3 39.8C24.9 38.9 26.5 37.8 28 36.5"/></svg><span class="wordmark">Sohan Hajra</span></a><nav class="primary-nav" aria-label="Primary"><a href="../index.html#about">About</a><a href="../index.html#research">Research</a><a href="../index.html#writing">Writing</a><a href="../index.html#cv">CV</a><a href="../index.html#workbench">Workbench</a></nav></header>
+<main id="main">
+<article class="reader">
+  <a class="back" href="../index.html#writing">← Writing</a>
+  <p class="kicker">Proposal 01</p>
+  <h1>From Signal to Fill</h1>
+  <p class="dek">When market conditions are matched, does extra delay between a trading decision and its order&rsquo;s outcome cost price or fills?</p>
+  <div class="byline"><span>Sohan Hajra</span><span>Nov 22, 2026</span><span id="rt">8 min read</span><b>Inconclusive</b></div>
+
+  <div class="player" id="player" hidden>
+    <button class="play" id="play" aria-pressed="false" aria-label="Listen to this post">
+      <svg id="ico" viewBox="0 0 16 16" fill="currentColor"><path d="M4 2.5v11l9-5.5z"/></svg>
+    </button>
+    <div class="pl-mid">
+      <span class="pl-label">Listen, read by Sohan <small id="pltime">0:00 / ~8:00</small></span>
+      <div class="bar" id="bar"><i id="fill"></i></div>
+    </div>
+    <button class="speed" id="speed">1x</button>
+  </div>
+  <div class="tools" aria-label="Text size"><button id="aminus" aria-label="Smaller text">A−</button><button id="aplus" aria-label="Larger text">A+</button></div>
+
+  <div class="body" id="body">
+  <dl class="tldr">
+    <dt>Hypothesis</dt><dd>With market conditions held identical, extra delay between decision and order outcome, from 1 ms to 500 ms, raises a taker&rsquo;s execution shortfall and lowers a passive order&rsquo;s chance of filling.</dd>
+    <dt>Test setup</dt><dd>A preregistered replay of Binance BTCUSDT perpetual book and trade data: the same decision replayed at nine delays, two locked test days run once, six more days for breadth, plus one 2012 Nasdaq day and a real broker latency measurement.</dd>
+    <dt>Verdict</dt><dd>Inconclusive. Both primary tests are null, but by design they could not show a cost. A taker acting on order book imbalance paid 0.52 to 0.66 bps by 500 ms on the test days, an upper end.</dd>
+    <div class="stamp"><a href="https://github.com/sohanHajra/Proposals/commit/913347d674dea90943ab67844704382684098eeb" target="_blank" rel="noopener">Preregistered Nov 15, 2026 ↗<span class="visually-hidden"> (opens in a new tab)</span></a> · before either test day was downloaded</div>
+  </dl>
+
+  <h2>Why I asked this</h2>
+  <p>Working on Nasdaq closing auctions taught me how much the timing of information matters. Building a walk-forward trading system made me skeptical of results that only look good under one set of assumptions. And rebuilding a small DEX prototype reminded me that a quoted price and an executed trade are different things.</p>
+  <p>So I started from a simple belief: latency costs takers through price drift and costs makers through lost queue position. I wanted to measure both, on the same decisions, with nothing changing except the delay.</p>
+
+  <h2>What I predicted, before seeing any test data</h2>
+  <p>I wrote the preregistration on November 15, before the replay engine existed and before either test day was downloaded. <a href="https://github.com/sohanHajra/Proposals/commit/913347d674dea90943ab67844704382684098eeb" target="_blank" rel="noopener">The commit that adds it</a> is the timestamp, and the data script refuses to fetch test days until that file is in git history.</p>
+  <p>Two main predictions. For a taker, the price should get worse as delay grows, by at least 0.1 bps at 500 ms on each test day. For a passive order, the chance of filling should fall as delay grows.</p>
+
+  <h2>How I tested it</h2>
+  <p>I used public Binance BTCUSDT perpetual data: top of book, five levels of depth, and every trade. One day was for building and debugging. Two days, October 1 and November 1, were locked away as tests and run once.</p>
+  <p>Decisions fire at random times, and each one is replayed nine times, with the order reaching the book 1, 2, 5, 10, 25, 50, 100, 250 and 500 ms later. Same moment, same side, same size. Only the delay changes. That gave 8,443 decisions on October 1 and 8,323 on November 1. The passive side ran under three rules for where cancellations come out of the queue, since a replay can&rsquo;t see that directly.</p>
+  <p>Around that core: six more first of month days for breadth, one 2012 Nasdaq day of real order lifecycles, and 200 real orders sent to a broker&rsquo;s paper venue to see where one retail setup sits on the grid.</p>
+
+  <h2>Results</h2>
+  <p><strong>Both primary tests are null on both test days.</strong> At 500 ms the taker paid 0.0038 bps more on October 1 and 0.0004 bps less on November 1, far below the 0.1 bps bar. Fill probability was flat under all three queue rules.</p>
+  <p>That is not a finding that delay costs nothing. A decision made at a random moment, whose order reads the book again when it arrives, has close to zero expected cost of delay by construction. I caught that on November 18, before running any test day, and wrote it down as a deviation. So these nulls only show the replay doesn&rsquo;t invent a cost. They can&rsquo;t tell whether latency matters.</p>
+  <p><strong>Where delay did cost something was an order acting on a signal.</strong> A taker trading on top of book imbalance paid about 0.085 bps at 1 ms and 0.66 bps at 500 ms on October 1, and 0.071 and 0.52 bps on November 1. On the six breadth days the 500 ms cost ran from 0.47 to 0.76 bps.</p>
+  <figure class="fig"><img src="img/01-fig1-cost-by-delay.png" alt="Mean top of book shortfall by delay. Random decisions stay near zero on all eight days; signal decisions rise to between about 0.5 and 0.8 bps at 500 ms." width="1650" height="720" loading="lazy"><figcaption>Random decisions on the left, signal decisions on the right, all eight days. The y axes differ by more than an order of magnitude.</figcaption></figure>
+  <p>I read that size as an upper end. The replay has no race, so the fast order never loses the touch to someone faster. And at 1 ms the touch showed less than my order on 47% of these decisions on October 1 and 35% on November 1, so the fast baseline often fills at a price a faster trader would likely have taken first. It is also a secondary result, not a registered test.</p>
+  <p>The Nasdaq test on real order lifecycles is null too: a longer rest before the first fill goes with a worse markout, but the effect loses its sign once spread, size, imbalance and volatility are controlled for. And the broker&rsquo;s paper venue took a median 255.9 ms to acknowledge an order, close to the 250 ms point on my grid, though that is a different venue and not Binance.</p>
+
+  <h2>What broke along the way</h2>
+  <ul>
+    <li>On day one, the LOBSTER sample links started returning a web page dressed up as a zip file. The download script now checks every file really is a zip.</li>
+    <li>A 2025 paper had already run a live taker experiment on Binance and Bybit, close to my first question. I narrowed what I claim as new.</li>
+    <li>The design flaw above: random decisions that reprice on arrival can&rsquo;t show a latency cost. I found it before the test days and kept the registered tests as they were, rather than quietly swapping them.</li>
+    <li>The October 1 run needed about 30 minutes and the remote worker stops any job at 20, so I reran it from scratch in fixed stages. Everything the first start wrote came back byte identical.</li>
+  </ul>
+
+  <h2>What I believe now</h2>
+  <p>I thought the passive side would be where delay costs most, since BTCUSDT&rsquo;s spread is one tick almost all the time and queue position should matter. On random decisions neither side shows a cost, but that test couldn&rsquo;t show one by design, so it doesn&rsquo;t settle the question. The cost that does show up is a taker acting on book imbalance, roughly half to three quarters of a bp by 500 ms on every day I ran, and that is an upper end because my replay has no race for the touch.</p>
+  <p>This is a simulation with injected delay on a handful of crypto days. It says nothing about real routing speed, other venues or other kinds of day. Nobody outside the project has reviewed it yet.</p>
+
+  <div class="endlinks">
+    <a href="https://github.com/sohanHajra/Proposals/blob/main/01-signal-to-fill/FINAL_REPORT.md" target="_blank" rel="noopener">Full report<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a>
+    <a href="https://github.com/sohanHajra/Proposals/blob/main/01-signal-to-fill/PROPOSAL.md" target="_blank" rel="noopener">Proposal<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a>
+    <a href="https://github.com/sohanHajra/Proposals/blob/main/01-signal-to-fill/PREREGISTRATION.md" target="_blank" rel="noopener">Preregistration<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a>
+    <a href="https://github.com/sohanHajra/Proposals/blob/main/01-signal-to-fill/LAB_NOTEBOOK.md" target="_blank" rel="noopener">Lab notebook<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a>
+    <a href="https://github.com/sohanHajra/Proposals/tree/main/01-signal-to-fill" target="_blank" rel="noopener">Code<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a>
+  </div>
+  </div>
+</article>
+</main>
+<footer class="site-footer"><span>© <span data-year>2026</span> Sohan Hajra</span><ul class="social" aria-label="Elsewhere"><li><a href="https://github.com/sohanHajra" target="_blank" rel="noopener" title="GitHub"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9.2 20.6c-3.6-.9-6-3.9-6-7.6 0-1.6.5-3.1 1.5-4.3-.3-1.1-.3-2.4.2-3.6 1.3 0 2.6.6 3.6 1.4 1.1-.3 2.3-.5 3.5-.5s2.4.2 3.5.5c1-.8 2.3-1.4 3.6-1.4.5 1.2.5 2.5.2 3.6 1 1.2 1.5 2.7 1.5 4.3 0 3.7-2.4 6.7-6 7.6"/><path d="M14.8 20.6v-2.4c0-.9-.3-1.6-.9-2.1 2.1-.3 3.6-1.5 3.6-3.9"/><path d="M9.2 20.6v-2.4c0-.9.3-1.6.9-2.1-2.1-.3-3.6-1.5-3.6-3.9"/><path d="M9.2 18.7c-2.3.5-3.1-.7-3.9-1.9"/></svg><span class="visually-hidden">GitHub</span><span class="visually-hidden"> (opens in a new tab)</span></a></li><li><a href="https://www.linkedin.com/in/sohan-hajra/" target="_blank" rel="noopener" title="LinkedIn"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><path d="M8 10.6V17"/><circle cx="8" cy="7.6" r=".55" fill="currentColor"/><path d="M11.4 17v-6.4M11.4 13.4c0-1.7 1.1-2.9 2.6-2.9s2.5 1.1 2.5 2.9V17"/></svg><span class="visually-hidden">LinkedIn</span><span class="visually-hidden"> (opens in a new tab)</span></a></li><li><a href="mailto:sohancollege27@gmail.com" title="Email"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="5.5" width="18" height="13" rx="1.8"/><path d="m3.6 6.6 8.4 6.6 8.4-6.6"/></svg><span class="visually-hidden">Email sohancollege27@gmail.com</span></a></li></ul></footer>
+</div>
+<div class="left" id="left"></div>
+<script>
+(function(){
+  var body=document.getElementById('body'), words=body.innerText.trim().split(/\s+/).length;
+  var mins=Math.max(1,Math.round(words/230)); document.getElementById('rt').textContent=mins+' min read';
+  var prog=document.getElementById('progress'), left=document.getElementById('left');
+  function onScroll(){
+    var r=body.getBoundingClientRect(), total=body.offsetHeight-innerHeight*0.6;
+    var p=Math.min(1,Math.max(0,-r.top/total)); prog.style.width=(p*100)+'%';
+    var m=Math.ceil(mins*(1-p)); left.textContent=p>=.99?'Finished':m+' min left'; left.classList.toggle('on',p>.03);
+  }
+  addEventListener('scroll',onScroll,{passive:true}); onScroll();
+  var fs=19.5; function setFs(d){fs=Math.min(24,Math.max(16,fs+d)); body.style.setProperty('--fs',fs+'px');}
+  document.getElementById('aminus').onclick=function(){setFs(-1.5)}; document.getElementById('aplus').onclick=function(){setFs(1.5)};
+
+  // Audio: the player shows only once ../audio/01-signal-to-fill.mp3 exists.
+  var btn=document.getElementById('play'), ico=document.getElementById('ico'), fill=document.getElementById('fill'),
+      t=document.getElementById('pltime'), sp=document.getElementById('speed'), bar=document.getElementById('bar');
+  var rates=[1,1.25,1.5,0.75], ri=0, audio=new Audio('../audio/01-signal-to-fill.mp3'), hasFile=false, playing=false;
+  var PLAY='M4 2.5v11l9-5.5z', PAUSE='M4 2.5h3v11H4zM9 2.5h3v11H9z';
+  audio.preload='metadata'; audio.addEventListener('loadedmetadata',function(){hasFile=true; upd();});
+  function fmt(s){s=Math.max(0,Math.round(s));return Math.floor(s/60)+':'+('0'+s%60).slice(-2);}
+  function setIcon(on){playing=on; ico.innerHTML='<path d="'+(on?PAUSE:PLAY)+'"/>'; btn.setAttribute('aria-pressed',on);}
+  function upd(){ if(hasFile){ fill.style.width=(audio.currentTime/audio.duration*100||0)+'%'; t.textContent=fmt(audio.currentTime)+' / '+fmt(audio.duration);} }
+  audio.addEventListener('timeupdate',upd); audio.addEventListener('ended',function(){setIcon(false)});
+  audio.addEventListener('loadedmetadata',function(){document.getElementById('player').hidden=false;});
+  btn.onclick=function(){ if(!hasFile)return; if(audio.paused){audio.play();setIcon(true)}else{audio.pause();setIcon(false)} };
+  sp.onclick=function(){ ri=(ri+1)%rates.length; sp.textContent=rates[ri]+'x'; audio.playbackRate=rates[ri]; };
+  bar.onclick=function(e){ if(!hasFile)return; var f=(e.clientX-bar.getBoundingClientRect().left)/bar.offsetWidth; audio.currentTime=f*audio.duration; };
+})();
+</script>
+</body></html>

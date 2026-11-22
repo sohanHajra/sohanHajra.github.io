@@ -15,7 +15,8 @@
   <meta property="og:image" content="https://sohanhajra.github.io/assets/og.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://sohanhajra.github.io/assets/og.jpg">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="Sohan Hajra · Writing" href="writing/feed.xml">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="manifest" href="site.webmanifest">
   <link rel="preload" href="assets/fonts/sourceserif4-normal-300-600-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/fonts.css">
@@ -134,12 +135,12 @@
       </div>
 
       <div class="group">
-        <div class="group-head"><h2>Proposals Lab</h2><span class="status live">Week 1 in progress · release planned Nov 22, 2026</span></div>
+        <div class="group-head"><h2>Proposals Lab</h2><span class="status done">01 released Nov 22, 2026</span></div>
         <div class="entry">
           <div class="entry-index">∞</div>
           <div>
             <h3>A weekly research-proposal series</h3>
-            <div class="body"><p>Each question goes from a one-page proposal to running code. Hypotheses are written down before results, dead ends stay in the log, and null results get published. The first, <a href="#writing">01 · From Signal to Fill</a>, is in progress now.</p><p>Every release goes through claimcheck, the lab&rsquo;s own checker. Each number in the public notes is traced to the results file it came from, and the check fails if any sentence disagrees with the data. It also confirms that every cited source says how deeply it was read and that the preregistration was committed before any test data was touched.</p></div>
+            <div class="body"><p>Each question goes from a one-page proposal to running code. Hypotheses are written down before results, dead ends stay in the log, and null results get published. The first, <a href="#writing">01 · From Signal to Fill</a>, came out on November 22, 2026 with an inconclusive verdict, reported as is.</p><p>Every release goes through claimcheck, the lab&rsquo;s own checker. Each number in the public notes is traced to the results file it came from, and the check fails if any sentence disagrees with the data. It also confirms that every cited source says how deeply it was read and that the preregistration was committed before any test data was touched.</p></div>
             <div class="entry-links"><a href="https://github.com/sohanHajra/Proposals" target="_blank" rel="noopener">Proposals on GitHub<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a><a href="https://github.com/sohanHajra/Proposals/tree/main/claimcheck" target="_blank" rel="noopener">claimcheck<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a></div>
           </div>
           <ul class="stats" aria-label="Series rules">
@@ -171,16 +172,22 @@
       <h1 id="writing-title" class="section-title">Proposals, one a week.</h1>
       <p class="section-lede">Each post is a research question taken from a one-page proposal to running code, with what I believed, what broke, and what I believe now.</p>
       <div class="group">
-        <div class="group-head"><h2>Posts</h2><span class="aside">A new proposal each week</span></div>
+        <div class="group-head"><h2>Posts</h2><span class="aside">A new proposal each week<a class="rss" href="writing/feed.xml"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="3" cy="13" r="1.6" fill="currentColor"/><path d="M2 7.5a6.5 6.5 0 0 1 6.5 6.5M2 2.5A11.5 11.5 0 0 1 13.5 14" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>RSS</a></span></div>
         <ol class="posts">
-          <li class="post">
+          <li class="post card2">
             <div class="entry-index">01</div>
             <div>
-              <h3><a href="https://github.com/sohanHajra/Proposals/tree/main/01-signal-to-fill" target="_blank" rel="noopener">From Signal to Fill<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a></h3>
-              <p class="desc">When market conditions are matched, does extra delay between a trading decision and its order&rsquo;s outcome cost price or fills? I am currently replaying the same decision moments at controlled delays on public Binance BTCUSDT data.</p>
-              <div class="entry-links"><a href="https://github.com/sohanHajra/Proposals/blob/main/01-signal-to-fill/PROPOSAL.md" target="_blank" rel="noopener">The proposal<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a><a href="https://github.com/sohanHajra/Proposals/blob/main/01-signal-to-fill/LAB_NOTEBOOK.md" target="_blank" rel="noopener">Lab notebook<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a></div>
+              <h3><a class="stretch" href="writing/01-signal-to-fill.html">From Signal to Fill</a></h3>
+              <p class="q">When market conditions are matched, does extra delay between a trading decision and its order&rsquo;s outcome cost price or fills?</p>
+              <dl class="htv">
+                <dt>Hypothesis</dt><dd>Extra delay from 1 ms to 500 ms raises a taker&rsquo;s execution shortfall and lowers a passive order&rsquo;s chance of filling.</dd>
+                <dt>Test setup</dt><dd>The same decision replayed at nine delays on Binance BTCUSDT perpetual data, preregistered, two locked test days run once plus six days for breadth.</dd>
+                <dt>Verdict</dt><dd><span class="chip">Inconclusive</span> Both primary tests are null by design. A taker acting on book imbalance paid 0.52 to 0.66 bps by 500 ms, an upper end.</dd>
+              </dl>
+              <div class="row"><span class="cta">Read the full story <span aria-hidden="true">→</span></span>
+                <span class="sec"><a href="https://github.com/sohanHajra/Proposals/blob/main/01-signal-to-fill/PROPOSAL.md" target="_blank" rel="noopener">Proposal<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a><a href="https://github.com/sohanHajra/Proposals/blob/main/01-signal-to-fill/LAB_NOTEBOOK.md" target="_blank" rel="noopener">Lab notebook<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a></span></div>
             </div>
-            <div class="meta"><span class="status live">In progress</span><span>Release planned Nov 22, 2026</span></div>
+            <div class="meta"><span class="status done">Released</span><span>Nov 22, 2026</span><span>5 min read</span></div>
           </li>
         </ol>
       </div>
