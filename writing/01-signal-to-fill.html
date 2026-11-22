@@ -144,9 +144,11 @@ body.lb-open { overflow: hidden; }
   var mins=Math.max(1,Math.round(words/230)); document.getElementById('rt').textContent=mins+' min read';
   var prog=document.getElementById('progress'), left=document.getElementById('left');
   function onScroll(){
-    var r=body.getBoundingClientRect(), total=body.offsetHeight-innerHeight*0.6;
-    var p=Math.min(1,Math.max(0,-r.top/total)); prog.style.width=(p*100)+'%';
-    var m=Math.ceil(mins*(1-p)); left.textContent=p>=.99?'Finished':m+' min left'; left.classList.toggle('on',p>.03);
+    var r=body.getBoundingClientRect(), total=Math.max(1,body.offsetHeight-innerHeight);
+    var p=Math.min(1,Math.max(0,-r.top/total));
+    var de=document.documentElement; if(innerHeight+(scrollY||de.scrollTop)>=de.scrollHeight-4) p=1;
+    prog.style.width=(p*100)+'%';
+    var m=p>=1?0:Math.max(1,Math.ceil(mins*(1-p))); left.textContent=m+' min left'; left.classList.toggle('on',p>.03);
   }
   addEventListener('scroll',onScroll,{passive:true}); onScroll();
   var fs=19.5; function setFs(d){fs=Math.min(24,Math.max(16,fs+d)); body.style.setProperty('--fs',fs+'px');}
