@@ -58,7 +58,7 @@ body.lb-open { overflow: hidden; }
 .left { font-family: var(--mono); font-size: 11.5px; color: var(--muted); position: fixed; right: 18px; bottom: 16px; background: var(--paper); padding: 4px 8px; border: 1px solid var(--line); opacity: 0; transition: opacity .3s; }
 .left.on { opacity: 1; }
 .tldr .seqline a { color: var(--accent); border-color: var(--accent); }
-.sq { border-left: 2px solid var(--accent); padding: 2px 0 6px 20px; margin: 18px 0 8px; scroll-margin-top: 30px; }
+.sq { border-left: 2px solid var(--accent); padding: 2px 20px 6px 20px; margin: 18px 0 8px; scroll-margin-top: 30px; }
 .sq-k { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--accent); margin: 0; }
 .sq h3 { font-size: 1.15em; margin: 4px 0 8px; }
 .sq-links { display:flex; flex-wrap:wrap; gap: 4px 18px; font-size: 15px; margin-top: 10px; }
@@ -174,8 +174,8 @@ body.lb-open { overflow: hidden; }
     var de=document.documentElement; if(innerHeight+(scrollY||de.scrollTop)>=de.scrollHeight-4) p=1;
     prog.style.width=(p*100)+'%';
     var m=p>=1?0:Math.max(1,Math.ceil(mins*(1-p))); left.textContent=m+' min left'; left.classList.toggle('on',p>.03);
-    // Narrow screens: the box sits over the text, so fade it 2.5s after scrolling stops.
-    clearTimeout(hideT); if(narrow.matches&&p>.03) hideT=setTimeout(function(){left.classList.remove('on');},2500);
+    // Narrow screens: the box sits over the text, so fade it 1.5s after scrolling stops.
+    clearTimeout(hideT); if(narrow.matches&&p>.03) hideT=setTimeout(function(){left.classList.remove('on');},1500);
   }
   addEventListener('scroll',onScroll,{passive:true}); onScroll();
   var fs=19.5; function setFs(d){fs=Math.min(24,Math.max(16,fs+d)); body.style.setProperty('--fs',fs+'px');}
