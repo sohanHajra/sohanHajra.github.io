@@ -57,6 +57,12 @@ body.lb-open { overflow: hidden; }
 .endlinks { display:flex; flex-wrap:wrap; gap: 6px 22px; border-top: 1px solid var(--line); margin-top: 44px; padding-top: 18px; font-size: 16px; }
 .left { font-family: var(--mono); font-size: 11.5px; color: var(--muted); position: fixed; right: 18px; bottom: 16px; background: var(--paper); padding: 4px 8px; border: 1px solid var(--line); opacity: 0; transition: opacity .3s; }
 .left.on { opacity: 1; }
+.tldr .seqline a { color: var(--accent); border-color: var(--accent); }
+.sq { border-left: 2px solid var(--accent); padding: 2px 0 6px 20px; margin: 18px 0 8px; scroll-margin-top: 30px; }
+.sq-k { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--accent); margin: 0; }
+.sq h3 { font-size: 1.15em; margin: 4px 0 8px; }
+.sq-links { display:flex; flex-wrap:wrap; gap: 4px 18px; font-size: 15px; margin-top: 10px; }
+.sq:target { background: var(--accent-wash); }
 @media (max-width: 720px) { .tldr { grid-template-columns: 1fr; gap: 2px; } .tldr dd { margin-bottom: 8px; } .body { --fs: 18px; } }
 </style></head>
 <body data-page="other">
@@ -89,6 +95,7 @@ body.lb-open { overflow: hidden; }
     <dt>Test setup</dt><dd>A preregistered replay of Binance BTCUSDT perpetual book and trade data: the same decision replayed at nine delays, two locked test days run once, six more days for breadth, plus one 2012 Nasdaq day and a real broker latency measurement.</dd>
     <dt>Verdict</dt><dd>Inconclusive. Both primary tests are null, but by design they could hardly show a cost. A taker acting on order book imbalance paid 0.52 to 0.66 bps by 500 ms on the test days, an upper end.</dd>
     <div class="stamp"><a href="https://github.com/sohanHajra/Proposals/commit/913347d674dea90943ab67844704382684098eeb" target="_blank" rel="noopener">Preregistered Nov 15, 2026 ↗<span class="visually-hidden"> (opens in a new tab)</span></a> · before either test day was downloaded</div>
+    <div class="stamp seqline">Sequel <a href="#s01b">01.b · Signal Cost Confirm</a> · in progress</div>
   </dl>
 
   <h2>Why I asked this</h2>
@@ -123,6 +130,21 @@ body.lb-open { overflow: hidden; }
   <h2>What I believe now</h2>
   <p>I thought the passive side would be where delay costs most, since BTCUSDT&rsquo;s spread is one tick almost all the time and queue position should matter, a reason that turned out weaker than I thought, since a tick here is only about 0.013 bps. On random decisions neither side shows a cost, but that test couldn&rsquo;t show one by design, so it doesn&rsquo;t settle the question. The cost that does show up is a taker acting on book imbalance, roughly half to three quarters of a bp by 500 ms on every day I ran, and that is an upper end because my replay has no race for the touch.</p>
   <p>This is a simulation with injected delay on a handful of crypto days. It says nothing about real routing speed, other venues or other kinds of day. Nobody but me has reviewed it yet, so I&rsquo;m open to <a href="mailto:sohancollege27@gmail.com">feedback</a>.</p>
+
+  <h2 id="sequels">Sequels</h2>
+  <p>The verdict above is final and stays as written. Each sequel is a new, separately judged test that goes one step further.</p>
+  <section class="sq" id="s01b">
+    <p class="sq-k">01.b · Sequel · in progress</p>
+    <h3>Signal Cost Confirm</h3>
+    <p>Two things in 01 looked real but weren&rsquo;t its main tests. A taker acting on top of book imbalance paid more the longer its order took to reach the book, and a fixed price passive order looked costlier with delay once the orders marketable on arrival were left out. 01.b checks both once, on days I haven&rsquo;t seen, with the rules written first.</p>
+    <dl class="tldr">
+      <dt>Question</dt><dd>Do signal decisions keep paying for delay, and does the fixed price passive slope stay above zero, on twelve unseen days?</dd>
+      <dt>Test setup</dt><dd>Binance BTCUSDT perpetual data on the Wednesday closest to the 15th of each month, December 2025 to November 2026, with Bybit and ETHUSDT as secondary checks.</dd>
+      <dt>Status</dt><dd>The loader and runner are built on the 01 build day. No test day has been run yet.</dd>
+      <div class="stamp"><a href="https://github.com/sohanHajra/Proposals/commit/b81f5f6" target="_blank" rel="noopener">Preregistered Nov 22, 2026 ↗<span class="visually-hidden"> (opens in a new tab)</span></a> · before any test day was downloaded</div>
+    </dl>
+    <div class="sq-links"><a href="https://github.com/sohanHajra/Proposals/blob/main/01b-signal-cost-confirm/PREREGISTRATION.md" target="_blank" rel="noopener">Preregistration<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a><a href="https://github.com/sohanHajra/Proposals/blob/main/01b-signal-cost-confirm/LAB_NOTEBOOK.md" target="_blank" rel="noopener">Lab notebook<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a><a href="https://github.com/sohanHajra/Proposals/tree/main/01b-signal-cost-confirm" target="_blank" rel="noopener">Code<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a></div>
+  </section>
 
   <div class="endlinks">
     <a href="https://github.com/sohanHajra/Proposals/blob/main/01-signal-to-fill/FINAL_REPORT.md" target="_blank" rel="noopener">Full report<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a>
