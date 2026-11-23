@@ -145,12 +145,15 @@ body.lb-open { overflow: hidden; }
   var body=document.getElementById('body'), words=body.innerText.trim().split(/\s+/).length;
   var mins=Math.max(1,Math.round(words/230)); document.getElementById('rt').textContent=mins+' min read';
   var prog=document.getElementById('progress'), left=document.getElementById('left');
+  var narrow=matchMedia('(max-width: 900px)'), hideT;
   function onScroll(){
     var r=body.getBoundingClientRect(), total=Math.max(1,body.offsetHeight-innerHeight);
     var p=Math.min(1,Math.max(0,-r.top/total));
     var de=document.documentElement; if(innerHeight+(scrollY||de.scrollTop)>=de.scrollHeight-4) p=1;
     prog.style.width=(p*100)+'%';
     var m=p>=1?0:Math.max(1,Math.ceil(mins*(1-p))); left.textContent=m+' min left'; left.classList.toggle('on',p>.03);
+    // Narrow screens: the box sits over the text, so fade it 2.5s after scrolling stops.
+    clearTimeout(hideT); if(narrow.matches&&p>.03) hideT=setTimeout(function(){left.classList.remove('on');},2500);
   }
   addEventListener('scroll',onScroll,{passive:true}); onScroll();
   var fs=19.5; function setFs(d){fs=Math.min(24,Math.max(16,fs+d)); body.style.setProperty('--fs',fs+'px');}
