@@ -12,7 +12,7 @@ main{max-width:44rem;margin:0 auto;padding:56px 24px 80px}
 .k{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:#6d6a63;margin:0 0 14px}
 h1{font-weight:400;font-size:34px;line-height:1.15;margin:0 0 12px}
 .box{font-family:"IBM Plex Mono",monospace;font-size:13px;border:1px dashed #7b2b23;color:#7b2b23;background:rgba(123,43,35,.05);padding:12px 14px;margin:22px 0 36px}
-.box code{user-select:all;background:#fff;padding:1px 5px;border:1px solid #d9d4c7;color:#1d1c1a}
+.box code{user-select:all;display:inline-block;max-width:100%;box-sizing:border-box;overflow-wrap:anywhere;word-break:break-all;background:#fff;padding:1px 5px;border:1px solid #d9d4c7;color:#1d1c1a}
 ol{list-style:none;margin:0;padding:0}
 li{border-top:1px solid #d9d4c7;padding:20px 0}
 li .m{font-family:"IBM Plex Mono",monospace;font-size:12px;color:#6d6a63}
