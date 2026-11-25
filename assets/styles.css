@@ -90,7 +90,8 @@ main:focus, main:focus-visible { outline: none; }
 .social a { display: grid; place-items: center; width: 54px; height: 54px; color: var(--ink); border-radius: 50%; transition: color .24s var(--ease), transform .24s var(--ease); }
 .social a:hover, .social a:focus-visible { color: var(--accent); transform: translateY(-2px); }
 .social .icon { width: 34px; height: 34px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
-@media (max-width: 540px) { .social a { width: 48px; height: 48px; } .social .icon { width: 30px; height: 30px; } }
+@media (max-width: 540px) { .site-footer { flex-wrap: nowrap; gap: 12px; } .site-footer > span { white-space: nowrap; } .social { gap: 6px; margin-right: -8px; } .social a { width: 42px; height: 42px; } .social .icon { width: 26px; height: 26px; } }
+@media (max-width: 370px) { .site-footer { font-size: 13px; gap: 8px; } .social { gap: 2px; } .social a { width: 38px; height: 38px; } .social .icon { width: 23px; height: 23px; } }
 @media (prefers-reduced-motion: reduce) { .social a:hover, .social a:focus-visible { transform: none; } }
 .social .icon [fill="currentColor"] { stroke: none; }
 
