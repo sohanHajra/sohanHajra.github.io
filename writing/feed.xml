@@ -7,8 +7,16 @@
     <atom:link href="https://sohanhajra.github.io/writing/feed.xml" rel="self" type="application/rss+xml"/>
     <description>Research proposals taken from a one-page question to running code: what I believed, what broke, and what I believe now.</description>
     <language>en-us</language>
-    <lastBuildDate>Sun, 22 Nov 2026 12:00:00 -0600</lastBuildDate>
+    <lastBuildDate>Wed, 25 Nov 2026 12:00:00 -0600</lastBuildDate>
     <ttl>720</ttl>
+    <item>
+      <title>01.b · Signal Cost Confirm (sequel to 01)</title>
+      <link>https://sohanhajra.github.io/writing/01-signal-to-fill.html#s01b</link>
+      <guid isPermaLink="true">https://sohanhajra.github.io/writing/01-signal-to-fill.html#s01b</guid>
+      <pubDate>Wed, 25 Nov 2026 12:00:00 -0600</pubDate>
+      <category>Sequel</category>
+      <description>Two leads from 01, checked once on twelve unseen days with the rules written first. Verdict: Supported for both. A taker acting on an extreme imbalance signal paid more the longer its order took, with the slope interval above zero on all 12 days and an extra 0.48 to 0.68 bps by 500 ms. The passive effect (C2) holds but is small.</description>
+    </item>
     <item>
       <title>01 · From Signal to Fill</title>
       <link>https://sohanhajra.github.io/writing/01-signal-to-fill.html</link>
