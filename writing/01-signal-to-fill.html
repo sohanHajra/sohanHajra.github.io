@@ -69,6 +69,10 @@ body.lb-open { overflow: hidden; }
 .sq h3 { font-size: 1.15em; margin: 4px 0 8px; }
 .sq-links { display:flex; flex-wrap:wrap; gap: 4px 18px; font-size: 15px; margin-top: 10px; }
 .sq:target { background: var(--accent-wash); }
+.sq-player { border-top: 1px solid var(--line); margin: 12px 0 4px; padding: 12px 0; }
+.sq-player .play { width: 38px; height: 38px; }
+.sq-player .play svg { width: 14px; height: 14px; }
+.sq-player .pl-label { font-size: 14.5px; }
 @media (max-width: 720px) { .tldr { grid-template-columns: 1fr; gap: 2px; } .tldr dd { margin-bottom: 8px; } .body { --fs: 18px; } }
 </style></head>
 <body data-page="other">
@@ -149,6 +153,16 @@ body.lb-open { overflow: hidden; }
       <dt>Verdict</dt><dd><b class="vd v-sup">Supported for both.</b> C1&rsquo;s slope interval is above zero on all 12 days, an extra 0.48 to 0.68 bps by 500 ms. C2 holds but is small, and weakest under the back queue rule, where 11 of 12 days are above zero.</dd>
       <div class="stamp"><a href="https://github.com/sohanHajra/Proposals/commit/b81f5f6" target="_blank" rel="noopener">Preregistered Nov 22, 2026 ↗<span class="visually-hidden"> (opens in a new tab)</span></a> · before any test day was downloaded</div>
     </dl>
+    <div class="player sq-player" id="player-b" hidden>
+      <button class="play" id="play-b" aria-pressed="false" aria-label="Listen to 01.b">
+        <svg id="ico-b" viewBox="0 0 16 16" fill="currentColor"><path d="M4 2.5v11l9-5.5z"/></svg>
+      </button>
+      <div class="pl-mid">
+        <span class="pl-label">Listen to 01.b, read by Sohan <small id="pltime-b">0:00 / 2:40</small></span>
+        <div class="bar" id="bar-b"><i id="fill-b"></i></div>
+      </div>
+      <button class="speed" id="speed-b">1x</button>
+    </div>
     <figure class="fig"><img src="img/01b-fig1-cost-split.png" alt="Extra taker cost at 500 ms on each of the twelve test days, between about 0.48 and 0.68 bps. On every day the drift bar is slightly taller than the total and the arrival bar is a small negative." width="1650" height="720" loading="lazy"><figcaption>Each test day&rsquo;s extra cost at 500 ms, split in two. Drift is larger than the whole cost on all 12 days. The book at arrival takes a hair back.</figcaption></figure>
     <p>So the cost 01 hinted at shows up on every one of twelve unseen days. It isn&rsquo;t the book getting worse. It&rsquo;s the move the signal predicted happening while the order waits. C2 holds on these days but is small, 0.021 to 0.090 bps from 1 ms to 500 ms under the front rule. Counting the 2 and 5 bps fees makes it bigger, not smaller, 0.063 to 0.281 bps, because a longer wait turns some maker fills into taker crossings. It&rsquo;s still well under a bp, and it describes the orders kept rather than a causal effect of delay.</p>
     <p>C1&rsquo;s day rule also passed on every one of the forty secondary days, ETHUSDT and Bybit included, though none of them count toward the verdict. The one setting I changed after a look at data was Bybit&rsquo;s signal threshold, after its build day. Both versions ran on every test date, and the original one gave a larger C1 on all 12, so the change made the effect smaller, not bigger.</p>
@@ -191,20 +205,29 @@ body.lb-open { overflow: hidden; }
   var fs=19.5; function setFs(d){fs=Math.min(24,Math.max(16,fs+d)); body.style.setProperty('--fs',fs+'px');}
   document.getElementById('aminus').onclick=function(){setFs(-1.5)}; document.getElementById('aplus').onclick=function(){setFs(1.5)};
 
-  // Audio: the player shows only once ../audio/01-signal-to-fill.mp3 exists.
-  var btn=document.getElementById('play'), ico=document.getElementById('ico'), fill=document.getElementById('fill'),
-      t=document.getElementById('pltime'), sp=document.getElementById('speed'), bar=document.getElementById('bar');
-  var rates=[1,1.25,1.5,0.75], ri=0, audio=new Audio('../audio/01-signal-to-fill.mp3'), hasFile=false, playing=false;
-  var PLAY='M4 2.5v11l9-5.5z', PAUSE='M4 2.5h3v11H4zM9 2.5h3v11H9z';
-  audio.preload='metadata'; audio.addEventListener('loadedmetadata',function(){hasFile=true; upd();});
+  // Audio: each player shows only once its mp3 exists; starting one pauses the other.
+  var PLAY='M4 2.5v11l9-5.5z', PAUSE='M4 2.5h3v11H4zM9 2.5h3v11H9z', players=[];
   function fmt(s){s=Math.max(0,Math.round(s));return Math.floor(s/60)+':'+('0'+s%60).slice(-2);}
-  function setIcon(on){playing=on; ico.innerHTML='<path d="'+(on?PAUSE:PLAY)+'"/>'; btn.setAttribute('aria-pressed',on);}
-  function upd(){ if(hasFile){ fill.style.width=(audio.currentTime/audio.duration*100||0)+'%'; t.textContent=fmt(audio.currentTime)+' / '+fmt(audio.duration);} }
-  audio.addEventListener('timeupdate',upd); audio.addEventListener('ended',function(){setIcon(false)});
-  audio.addEventListener('loadedmetadata',function(){document.getElementById('player').hidden=false;});
-  btn.onclick=function(){ if(!hasFile)return; if(audio.paused){audio.play();setIcon(true)}else{audio.pause();setIcon(false)} };
-  sp.onclick=function(){ ri=(ri+1)%rates.length; sp.textContent=rates[ri]+'x'; audio.playbackRate=rates[ri]; };
-  bar.onclick=function(e){ if(!hasFile)return; var f=(e.clientX-bar.getBoundingClientRect().left)/bar.offsetWidth; audio.currentTime=f*audio.duration; };
+  function mkPlayer(src,sfx){
+    var g=function(id){return document.getElementById(id+sfx)};
+    var box=g('player'), btn=g('play'), ico=g('ico'), fill=g('fill'), t=g('pltime'), sp=g('speed'), bar=g('bar');
+    if(!box) return;
+    var rates=[1,1.25,1.5,0.75], ri=0, audio=new Audio(src), hasFile=false;
+    audio.preload='metadata';
+    function setIcon(on){ ico.innerHTML='<path d="'+(on?PAUSE:PLAY)+'"/>'; btn.setAttribute('aria-pressed',on); }
+    function upd(){ if(hasFile){ fill.style.width=(audio.currentTime/audio.duration*100||0)+'%'; t.textContent=fmt(audio.currentTime)+' / '+fmt(audio.duration);} }
+    audio.addEventListener('loadedmetadata',function(){ hasFile=true; box.hidden=false; upd(); });
+    audio.addEventListener('timeupdate',upd);
+    audio.addEventListener('play',function(){ setIcon(true); players.forEach(function(o){ if(o!==audio && !o.paused) o.pause(); }); });
+    audio.addEventListener('pause',function(){ setIcon(false); });
+    audio.addEventListener('ended',function(){ setIcon(false); });
+    btn.onclick=function(){ if(!hasFile)return; if(audio.paused){audio.play()}else{audio.pause()} };
+    sp.onclick=function(){ ri=(ri+1)%rates.length; sp.textContent=rates[ri]+'x'; audio.playbackRate=rates[ri]; };
+    bar.onclick=function(e){ if(!hasFile)return; var f=(e.clientX-bar.getBoundingClientRect().left)/bar.offsetWidth; audio.currentTime=f*audio.duration; };
+    players.push(audio);
+  }
+  mkPlayer('../audio/01-signal-to-fill.mp3','');
+  mkPlayer('../audio/01b-signal-cost-confirm.mp3','-b');
 
   // Figure lightbox: click a figure to enlarge; click outside the image or press Esc to close.
   var lb=document.getElementById('lb'), lbimg=document.getElementById('lbimg'), lbcap=document.getElementById('lbcap'), lastFocus=null;
