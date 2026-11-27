@@ -66,7 +66,8 @@ body.lb-open { overflow: hidden; }
 .upd { font-family: var(--mono); font-size: 11.5px; color: var(--accent); }
 .sq { border-left: 2px solid var(--accent); padding: 2px 20px 6px 20px; margin: 18px 0 8px; scroll-margin-top: 30px; }
 .sq-k { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--accent); margin: 0; }
-.sq h3 { font-size: 1.15em; margin: 4px 0 8px; }
+.sq h3 { font-size: 1.15em; margin: 10px 0 8px; }
+@media (max-width: 720px) { .sq-k { line-height: 1.6; } .sq h3 { margin-top: 16px; } }
 .rev { border: 1px dashed var(--line-strong); padding: 12px 18px 4px; margin: 18px 0 6px; font-size: .95em; scroll-margin-top: 30px; }
 .rev-k { font-family: var(--mono); font-size: 11.5px; letter-spacing: .05em; color: var(--accent); margin: 0 0 8px; }
 .rev-k span { color: var(--muted); }
@@ -176,8 +177,8 @@ body.lb-open { overflow: hidden; }
     <div class="rev" id="s01b-rev">
       <p class="rev-k">Revisited Nov 26, 2026 · <span>Exploratory, after release</span></p>
       <p>A day after release I went back to C2 with two questions I&rsquo;d left open. Neither changes C1, C2 or the verdict.</p>
-      <p><b>How much of it is fees.</b> Under the front rule, fees are 66 to 73 percent of C2&rsquo;s extra cost from 1 ms to 500 ms on every test day.</p>
-      <p><b>What if a faster trader takes the stale price.</b> I kept every passive order and treated any that arrived marketable as losing the race, so it crosses 10 s later. Cost then falls with delay, below zero on 11 of 12 days under front and all 12 under random and back. Those orders still beat the decision mid when they cross late, because most of the move that made them marketable is still there. Every other order gets dearer with delay, as in C2.</p>
+      <p><b>How much of it is fees?</b> Under the front rule, fees are 66 to 73 percent of C2&rsquo;s extra cost from 1 ms to 500 ms on every test day.</p>
+      <p><b>What if a faster trader takes the stale price?</b> I kept every passive order and treated any that arrived marketable as losing the race, so it crosses 10 s later. Cost then falls with delay, below zero on 11 of 12 days under front and all 12 under random and back. Those orders still beat the decision mid when they cross late, because most of the move that made them marketable is still there. Every other order gets dearer with delay, as in C2.</p>
       <p>So C2&rsquo;s sign rests on which orders are kept. This reuses the same twelve days, so it explains them and doesn&rsquo;t confirm anything new.</p>
       <p class="rev-src"><a href="https://github.com/sohanHajra/Proposals/blob/main/01b-signal-cost-confirm/README.md#revisited-2026-11-26" target="_blank" rel="noopener">Revisited notes<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a></p>
     </div>

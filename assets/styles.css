@@ -377,14 +377,14 @@ td + td { font-family: var(--mono); font-size: 14.5px; }
 /* Sequels: one line per card (approved 2026-11-20) */
 .seq { position:relative; z-index:2; border-top:1px dashed var(--line-strong); margin: 4px 0 20px; padding-top: 12px; max-width: 42rem; }
 .seq ol { list-style:none; margin:0; padding:0; display:grid; gap: 8px; }
-.seq li { display:grid; grid-template-columns: 44px minmax(0,1fr) auto; gap: 4px 14px; align-items: baseline; font-size: 16px; }
+.seq li { display:grid; grid-template-columns: 44px minmax(0,1fr) auto auto; gap: 4px 14px; align-items: baseline; font-size: 16px; }
 .seq .n { font-family: var(--mono); font-size: 13px; color: var(--accent); }
 .seq .t { color: var(--ink-2); }
 .seq .when { font-family: var(--mono); font-size: 12px; color: var(--muted); white-space: nowrap; }
 .seq a { color: var(--ink-2); text-decoration:none; border-bottom: 1px solid var(--line-strong); }
 .seq a:hover { color: var(--accent); border-color: var(--accent); }
 .upd { font-family: var(--mono); font-size: 11.5px; color: var(--accent); border:1px solid var(--accent); padding: 1px 7px; }
-@media (max-width: 720px) { .seq li { grid-template-columns: 40px minmax(0,1fr); } .seq .when { grid-column: 2; } }
+@media (max-width: 720px) { .seq li { grid-template-columns: 40px minmax(0,1fr) auto; row-gap: 6px; } .seq .v { grid-column: 3; } .seq .when { grid-column: 2 / -1; white-space: normal; } }
 
 /* verdict chips: colour by outcome so the verdict reads at a glance */
 .chip.v-sup, .chip.v-inc, .chip.v-not { font-weight: 600; letter-spacing: .02em; }
