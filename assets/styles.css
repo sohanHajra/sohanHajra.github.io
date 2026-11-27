@@ -320,6 +320,11 @@ td + td { font-family: var(--mono); font-size: 14.5px; }
   .stats .v { font-size: 20px; }
   .stats .k { font-size: 13px; line-height: 1.35; }
   .post .meta { text-align: left; justify-items: start; padding-top: 6px; grid-row: 2; }
+  .post .meta { grid-template-columns: 1fr auto; column-gap: 12px; padding-bottom: 12px; }
+  .post .meta > :nth-child(1) { grid-column: 1; grid-row: 1; }
+  .post .meta > :nth-child(2) { grid-column: 1; grid-row: 2; }
+  .post .meta > :nth-child(3) { grid-column: 2; grid-row: 2; justify-self: end; }
+  .post .meta > .upd { grid-column: 1; grid-row: 3; margin-top: 4px; }
   .tl { grid-template-columns: 1fr; gap: 2px; padding: 20px 0; }
   .tl .when { padding-top: 0; }
   .controls { grid-template-columns: 1fr; }
