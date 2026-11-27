@@ -67,6 +67,12 @@ body.lb-open { overflow: hidden; }
 .sq { border-left: 2px solid var(--accent); padding: 2px 20px 6px 20px; margin: 18px 0 8px; scroll-margin-top: 30px; }
 .sq-k { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--accent); margin: 0; }
 .sq h3 { font-size: 1.15em; margin: 4px 0 8px; }
+.rev { border: 1px dashed var(--line-strong); padding: 12px 18px 4px; margin: 18px 0 6px; font-size: .95em; scroll-margin-top: 30px; }
+.rev-k { font-family: var(--mono); font-size: 11.5px; letter-spacing: .05em; color: var(--accent); margin: 0 0 8px; }
+.rev-k span { color: var(--muted); }
+.rev p { margin: 0 0 10px; }
+.rev-src { font-size: 14px; }
+.seeal { color: var(--accent); }
 .sq-links { display:flex; flex-wrap:wrap; gap: 4px 18px; font-size: 15px; margin-top: 10px; }
 .sq:target { background: var(--accent-wash); }
 .sq-player { border-top: 1px solid var(--line); margin: 12px 0 4px; padding: 12px 0; }
@@ -85,7 +91,7 @@ body.lb-open { overflow: hidden; }
   <p class="kicker">Proposal 01</p>
   <h1>From Signal to Fill</h1>
   <p class="dek">When market conditions are matched, does extra delay between a trading decision and its order&rsquo;s outcome cost price or fills?</p>
-  <div class="byline"><span>Sohan Hajra</span><span>Nov 22, 2026</span><span id="rt">8 min read</span><b class="vd v-inc">Inconclusive</b><span class="upd">Updated Nov 25, 2026 · sequel 01.b</span></div>
+  <div class="byline"><span>Sohan Hajra</span><span>Nov 22, 2026</span><span id="rt">8 min read</span><b class="vd v-inc">Inconclusive</b><span class="upd">Updated Nov 26, 2026 · 01.b revisited</span></div>
 
   <div class="player" id="player" hidden>
     <button class="play" id="play" aria-pressed="false" aria-label="Listen to this post">
@@ -144,13 +150,13 @@ body.lb-open { overflow: hidden; }
   <h2 id="sequels">Sequels</h2>
   <p>The verdict above is final and stays as written. Each sequel is a new, separately judged test that goes one step further.</p>
   <section class="sq" id="s01b">
-    <p class="sq-k">01.b · Sequel · released Nov 25, 2026</p>
+    <p class="sq-k">01.b · Sequel · released Nov 25, 2026 · revisited Nov 26, 2026</p>
     <h3>Signal Cost Confirm</h3>
     <p>Two things in 01 looked real but weren&rsquo;t its main tests. A taker acting on top of book imbalance paid more the longer its order took to reach the book, and a fixed price passive order looked costlier with delay once the orders marketable on arrival were left out. 01.b checked both once, on twelve days I hadn&rsquo;t seen, with the rules written first.</p>
     <dl class="tldr">
       <dt>Hypothesis</dt><dd>A taker acting on an extreme imbalance signal pays more the longer its order takes (C1), and among the fixed price passive orders kept, with the ones marketable on arrival left out, cost is higher at longer delays (C2).</dd>
       <dt>Test setup</dt><dd>Rules preregistered, then twelve unseen CryptoStruct days of Binance BTCUSDT perpetual data, the Wednesday closest to the 15th of each month from December 2025 to November 2026 (June moved to Thursday the 18th after a data notice on the Wednesday), each run once. Forty secondary days (four more CryptoStruct days, Tardis BTCUSDT and ETHUSDT, and Bybit) sit outside the verdict.</dd>
-      <dt>Verdict</dt><dd><b class="vd v-sup">Supported for both.</b> C1&rsquo;s slope interval is above zero on all 12 days, an extra 0.48 to 0.68 bps by 500 ms. C2 holds but is small, and weakest under the back queue rule, where 11 of 12 days are above zero.</dd>
+      <dt>Verdict</dt><dd><b class="vd v-sup">Supported for both.</b> C1&rsquo;s slope interval is above zero on all 12 days, an extra 0.48 to 0.68 bps by 500 ms. C2 holds but is small, and weakest under the back queue rule, where 11 of 12 days are above zero. <a class="seeal" href="#s01b-rev">See Revisited</a> for how much C2 rests on which orders are kept.</dd>
       <div class="stamp"><a href="https://github.com/sohanHajra/Proposals/commit/b81f5f6" target="_blank" rel="noopener">Preregistered Nov 22, 2026 ↗<span class="visually-hidden"> (opens in a new tab)</span></a> · before any test day was downloaded</div>
     </dl>
     <div class="player sq-player" id="player-b" hidden>
@@ -167,6 +173,14 @@ body.lb-open { overflow: hidden; }
     <p>So the cost 01 hinted at shows up on every one of twelve unseen days. It isn&rsquo;t the book getting worse. It&rsquo;s the move the signal predicted happening while the order waits. C2 holds on these days but is small, 0.021 to 0.090 bps from 1 ms to 500 ms under the front rule. Counting the 2 and 5 bps fees makes it bigger, not smaller, 0.063 to 0.281 bps, because a longer wait turns some maker fills into taker crossings. It&rsquo;s still well under a bp, and it describes the orders kept rather than a causal effect of delay.</p>
     <p>C1&rsquo;s day rule also passed on every one of the forty secondary days, ETHUSDT and Bybit included, though none of them count toward the verdict. The one setting I changed after a look at data was Bybit&rsquo;s signal threshold, after its build day. Both versions ran on every test date, and the original one gave a larger C1 on all 12, so the change made the effect smaller, not bigger.</p>
     <p>Limits: one venue, one symbol and one day a month for a year, and my replay still has no real race for the touch.</p>
+    <div class="rev" id="s01b-rev">
+      <p class="rev-k">Revisited Nov 26, 2026 · <span>Exploratory, after release</span></p>
+      <p>A day after release I went back to C2 with two questions I&rsquo;d left open. Neither changes C1, C2 or the verdict.</p>
+      <p><b>How much of it is fees.</b> Under the front rule, fees are 66 to 73 percent of C2&rsquo;s extra cost from 1 ms to 500 ms on every test day.</p>
+      <p><b>What if a faster trader takes the stale price.</b> I kept every passive order and treated any that arrived marketable as losing the race, so it crosses 10 s later. Cost then falls with delay, below zero on 11 of 12 days under front and all 12 under random and back. Those orders still beat the decision mid when they cross late, because most of the move that made them marketable is still there. Every other order gets dearer with delay, as in C2.</p>
+      <p>So C2&rsquo;s sign rests on which orders are kept. This reuses the same twelve days, so it explains them and doesn&rsquo;t confirm anything new.</p>
+      <p class="rev-src"><a href="https://github.com/sohanHajra/Proposals/blob/main/01b-signal-cost-confirm/README.md#revisited-2026-11-26" target="_blank" rel="noopener">Revisited notes<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a></p>
+    </div>
     <div class="sq-links"><a href="https://github.com/sohanHajra/Proposals/blob/main/01b-signal-cost-confirm/README.md" target="_blank" rel="noopener">Write-up<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a><a href="https://github.com/sohanHajra/Proposals/blob/main/01b-signal-cost-confirm/PREREGISTRATION.md" target="_blank" rel="noopener">Preregistration<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a><a href="https://github.com/sohanHajra/Proposals/blob/main/01b-signal-cost-confirm/LAB_NOTEBOOK.md" target="_blank" rel="noopener">Lab notebook<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a><a href="https://github.com/sohanHajra/Proposals/tree/main/01b-signal-cost-confirm" target="_blank" rel="noopener">Code<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a><a href="https://www.linkedin.com/posts/sohan-hajra_last-sunday-my-first-research-proposal-came-share-7531429902370226176-LbIx/" target="_blank" rel="noopener">LinkedIn post<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a><a href="https://x.com/sohan_hajra/status/2125671644962464019" target="_blank" rel="noopener">X thread<span class="ext" aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a></div>
   </section>
 
